@@ -1,9 +1,6 @@
 import { config } from "@feature/config"
 import "./App.css"
 
-const c: string = "124599"
-console.log(c)
-
 const App = () => {
     return (
         <div class="content">
