@@ -2,5 +2,10 @@
     "extends": "astro/tsconfigs/strict",
     "compilerOptions": {
         "composite": true
-    }
+    },
+    "references": [
+        {
+            "path": "../../package/feature/config"
+        }
+    ]
 }

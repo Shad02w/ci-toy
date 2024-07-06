@@ -43,7 +43,7 @@ importers:
         version: 0.7.0(prettier-plugin-astro@0.14.0)(prettier@3.3.2)(typescript@5.5.3)
       '@feature/config':
         specifier: workspace:*
-        version: link:../../lib/features/config
+        version: link:../../package/feature/config
       astro:
         specifier: ^4.11.5
         version: 4.11.5(@types/node@20.14.10)(terser@5.31.1)(typescript@5.5.3)
@@ -55,7 +55,7 @@ importers:
     dependencies:
       '@feature/config':
         specifier: workspace:*
-        version: link:../../lib/features/config
+        version: link:../../package/feature/config
       solid-js:
         specifier: ^1.8.18
         version: 1.8.18
@@ -73,7 +73,7 @@ importers:
         specifier: 1.0.0-alpha.4
         version: 1.0.0-alpha.4(@rsbuild/core@1.0.0-alpha.4)(typescript@5.5.3)
 
-  lib/features/config: {}
+  package/feature/config: {}
 
 packages:
 

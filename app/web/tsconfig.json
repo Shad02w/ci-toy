@@ -9,5 +9,10 @@
         "composite": true,
         "moduleResolution": "bundler"
     },
-    "include": ["src"]
+    "include": ["src"],
+    "references": [
+        {
+            "path": "../../package/feature/config"
+        }
+    ]
 }

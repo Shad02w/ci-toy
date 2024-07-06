@@ -9,7 +9,7 @@
             "path": "./app/docs"
         },
         {
-            "path": "./lib/features/config"
+            "path": "./package/feature/config"
         }
     ]
 }
