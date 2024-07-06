@@ -4,6 +4,9 @@ import { pluginSolid } from "@rsbuild/plugin-solid"
 import { pluginTypeCheck } from "@rsbuild/plugin-type-check"
 
 export default defineConfig({
+    dev: {
+        progressBar: false
+    },
     plugins: [
         pluginBabel({
             include: /\.(?:jsx|tsx)$/
