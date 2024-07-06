@@ -12,6 +12,12 @@
             "options": {
                 "parser": "astro"
             }
+        },
+        {
+            "files": ["*.yaml", "*.yml"],
+            "options": {
+                "tabWidth": 2
+            }
         }
     ]
 }
