@@ -1,7 +1,7 @@
 import { config } from "@feature/config"
 import "./App.css"
 
-const c: string = 4
+const c: string = "123"
 console.log(c)
 
 const App = () => {
