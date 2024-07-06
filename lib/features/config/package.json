@@ -2,5 +2,8 @@
     "name": "@feature/config",
     "private": true,
     "type": "module",
+    "scripts": {
+        "test": "echo \"This is feature config test\""
+    },
     "exports": "./index.ts"
 }
