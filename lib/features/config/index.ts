@@ -1,3 +1,4 @@
 export const config = {
-    dev: true
+    dev: true,
+    port: 3000
 }
