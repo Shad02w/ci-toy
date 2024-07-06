@@ -1,0 +1,6 @@
+{
+    "name": "config",
+    "private": true,
+    "type": "module",
+    "exports": "./index.ts"
+}
