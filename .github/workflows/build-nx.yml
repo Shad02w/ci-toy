@@ -5,11 +5,14 @@ on:
     branches:
       - nx
   pull_request:
+    types:
+      - "labeled"
     branches:
       - nx
 
 jobs:
   build:
+    if: ${{ github.event.label.name == 'docs' }}
     name: Build and Test (NX)
     runs-on: ubuntu-latest
 
