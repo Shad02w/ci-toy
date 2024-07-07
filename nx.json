@@ -1,0 +1,31 @@
+{
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "namedInputs": {
+        "prettier": [
+            "{projectRoot}/**/*.{ts,js,tsx,jsx,json,css,scss,html}",
+            "{workspaceRoot}/.prettierignore",
+            "{workspaceRoot}/.prettierrc"
+        ]
+    },
+    "targetDefaults": {
+        "build": {
+            "dependsOn": ["^build", "test", "format", "lint"],
+            "outputs": ["{projectRoot}/dist", "{projectRoot}/build"],
+            "cache": true
+        },
+        "format": {
+            "dependsOn": ["^format"],
+            "inputs": ["prettier"],
+            "cache": true
+        },
+        "test": {
+            "dependsOn": ["^test"],
+            "cache": true
+        },
+        "lint": {
+            "dependsOn": ["^lint"],
+            "cache": true
+        }
+    },
+    "defaultBase": "main"
+}

@@ -5,7 +5,8 @@
 
 # Dist
 node_modules
-dist/
+dist
+build
 
 # IDE
 .vscode/*
@@ -32,3 +33,8 @@ pnpm-debug.log*
 
 
 .turbo
+
+
+
+.nx/cache
+.nx/workspace-data

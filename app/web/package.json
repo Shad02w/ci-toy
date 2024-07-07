@@ -6,9 +6,9 @@
         "build": "rsbuild build",
         "dev": "rsbuild dev --open",
         "preview": "rsbuild preview",
-        "format": "prettier --check .",
+        "format": "prettier --ignore-path ../../.prettierignore --check ./src",
         "test": "echo test",
-        "lint": "eslint .",
+        "lint": "eslint ./src",
         "format:write": "prettier --write ."
     },
     "dependencies": {
