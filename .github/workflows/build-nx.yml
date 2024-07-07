@@ -42,4 +42,4 @@ jobs:
         run: pnpm install
 
       - name: Build the application
-        run: pnpm dlx nx run-many -t build
+        run: pnpm dlx nx run-many -t build --verbose
