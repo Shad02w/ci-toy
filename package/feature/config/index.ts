@@ -1,4 +1,4 @@
 export const config = {
     dev: true,
-    port: 4002
+    port: 4000
 }
