@@ -23,11 +23,18 @@ jobs:
       - name: Build the application
         run: pnpm dlx nx run-many -t build --verbose
 
-      - name: Release the docs
+      - name: Zip the docs
         run: cd app/docs && zip -r dist.zip dist
 
-      - name: Upload the docs
-        uses: actions/upload-artifact@v3
+      - name: Release the docs app to release page
+        uses: softprops/action-gh-release@v2
         with:
-          name: docs
-          path: app/docs/dist.zip
+          name: Release ${{ github.sha }}
+          body: |
+            Release of commit ${{ github.sha }}
+            Committed by: ${{ github.actor }}
+            Commit message: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+          files: app/docs/dist.zip
+          tag_name: ${{ github.sha }}
