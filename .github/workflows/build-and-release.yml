@@ -23,25 +23,23 @@ jobs:
       - name: Build the application
         run: pnpm dlx nx run-many -t build --verbose
 
-      - name: Zip the docs
-        run: cd app/docs && zip -r dist.zip dist
+      - name: Get short SHA
+        id: slug
+        run: echo "sha8=$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
 
-      - name: Generate release tag
-        id: tag
-        run: |
-          sha_short=$(git rev-parse --short HEAD)
-          echo "sha_short=${sha_short}" >> $GITHUB_OUTPUT
+      - name: Zip the docs
+        run: cd app/docs && zip -r dist-${{ steps.slug.outputs.sha8 }}.zip dist
 
       - name: Release the docs app to release page
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          name: Release ${{ steps.tag.outputs.sha_short }}
+          name: Release dev-${{ steps.slug.outputs.sha8 }}
           body: |
             Release of commit ${{ github.sha }}
             message: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
-          files: app/docs/dist-${{ steps.tag.outputs.sha_short }}.zip
-          tag_name: ${{ steps.tag.outputs.sha_short }}
+          files: app/docs/dist-${{ steps.slug.outputs.sha8 }}.zip
+          tag_name: ${{ steps.slug.outputs.sha8 }}
