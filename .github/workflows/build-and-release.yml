@@ -1,0 +1,33 @@
+name: App Build
+
+on:
+  push:
+    branches:
+      - nx-release-zip
+
+jobs:
+  build:
+    name: Build and Test (NX)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-and-pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build the application
+        run: pnpm dlx nx run-many -t build --verbose
+
+      - name: Release the docs
+        run: cd app/docs && zip -r dist.zip dist
+
+      - name: Upload the docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: app/docs/dist.zip
