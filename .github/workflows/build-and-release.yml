@@ -26,12 +26,18 @@ jobs:
       - name: Zip the docs
         run: cd app/docs && zip -r dist.zip dist
 
+      - name: Generate release tag
+        id: tag
+        run: |
+          sha_short=$(git rev-parse --short HEAD)
+          echo "release_tag=release-${sha_short}" >> $GITHUB_OUTPUT
+
       - name: Release the docs app to release page
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          name: Release ${{ github.sha }}
+          name: Release ${{ steps.tag.outputs.release_tag }}
           body: |
             Release of commit ${{ github.sha }}
             Committed by: ${{ github.actor }}
@@ -39,4 +45,4 @@ jobs:
           draft: false
           prerelease: false
           files: app/docs/dist.zip
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.tag.outputs.release_tag }}
