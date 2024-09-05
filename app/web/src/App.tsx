@@ -13,4 +13,4 @@ const App = () => {
 
 export default App
 
-console.log("hi")
+console.log("123")
