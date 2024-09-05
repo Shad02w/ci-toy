@@ -14,3 +14,4 @@ const App = () => {
 export default App
 
 console.log("p")
+console.log("hi")
