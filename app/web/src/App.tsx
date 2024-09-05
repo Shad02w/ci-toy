@@ -1,5 +1,6 @@
 import { config } from "@feature/config"
 import "./App.css"
+import { clearDelegatedEvents } from "solid-js/web"
 
 const App = () => {
     return (
@@ -15,3 +16,4 @@ export default App
 
 console.log("p")
 console.log("hi")
+console.log("renato")
