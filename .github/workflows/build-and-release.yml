@@ -1,6 +1,7 @@
 name: Build and Release beta
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - nx-release-zip
