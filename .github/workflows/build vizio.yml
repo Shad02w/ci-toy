@@ -1,0 +1,64 @@
+# This is a basic workflow to help you get started with Actions
+
+name: S3 Deploy Vizio Develop
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFRONT_DISTRIBUTION_ID: E35N59O3PPSH5Z
+      AWS_S3_BUCKET: gotham-vizio-dev
+      AWS_REGION: us-east-1
+      SOURCE_DIR: apps/ctv/dist
+      REACT_APP_ENV: DEVELOP
+
+      GAME_BUILD_CONFIG_URL: https://config-dev.gothamsports.com/Configurations/v1/build.json
+      PUBLIC_PLATFORM: vizio
+
+      PUBLIC_REACT_APP_BITMOVIN_APP_ID: com.clearbridgemobile.game
+
+      PUBLIC_QUICKPLAY_AUTH_CLIENT_SECRET: 7d3108c9-2e49-40f5-8337-c581d71e3ae0
+
+      # SEGMENT
+      PUBLIC_SEGMENT_KEY: XieCk9Sw92T6DzJ9Nn1Lb15yl9Dp5BD8
+
+      # VIZIO
+      PUBLIC_VIZIO_SIGNING_URL: https://api-dev.gothamsports.com/vizio/sign
+      PUBLIC_VIZIO_PARTNER_KEY: gotham-4fb66a6f4ade
+      PUBLIC_VIZIO_PARTNER_ID: yes_network
+      PUBLIC_VIZIO_APP_ID: vizio.app.gotham
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF##*/}
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-and-pnpm
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build project
+        run: |
+          cd apps/ctv
+          pnpm build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@main
+        with:
+          aws-access-key-id: ${{ secrets.GAME_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GAME_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to S3 bucket
+        run: aws s3 sync ./$SOURCE_DIR/ s3://$AWS_S3_BUCKET --delete
+
+      - name: Invalidate CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths /\*
