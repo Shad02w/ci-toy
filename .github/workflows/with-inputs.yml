@@ -1,6 +1,9 @@
 name: Mixed inputs
 
 on:
+  push:
+    branches:
+      - nx-release-zip
   workflow_dispatch:
     inputs:
       name:
