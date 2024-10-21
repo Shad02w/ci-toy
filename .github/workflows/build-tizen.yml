@@ -31,5 +31,5 @@ jobs:
       - name: Tizen package the application
         working-directory: app/web
         run:  |
-          tizen package --t wgt -o out -- ./dist/.buildResult \
+          tizen package -t wgt -o out -- ./dist/.buildResult \
           && ls -la out
