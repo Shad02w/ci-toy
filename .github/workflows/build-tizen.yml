@@ -29,4 +29,9 @@ jobs:
         if: steps.cache-tizen-sdk.outputs.cache-hit != 'true'
         run: curl -o $TIZEN_SDK_FILENAME "$TIZEN_SDK_URL"
 
-      # Add your next steps here, such as installing the SDK and building your app
+      - name: Make Tizen SDK executable
+        run: chmod +x $TIZEN_SDK_FILENAME
+
+
+      - name: Show license
+        run: ${{ TIZEN_SDK_FILENAME }} --show-license
