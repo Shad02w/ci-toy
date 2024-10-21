@@ -3,7 +3,7 @@ name: Tizen build
 on:
   push:
     branches:
-      - tizen
+      - tizen-build
 jobs:
   build:
     name: Build Tizen App
