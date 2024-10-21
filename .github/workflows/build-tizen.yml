@@ -11,6 +11,7 @@ jobs:
     env:
       TIZEN_SDK_URL: https://download.tizen.org/sdk/Installer/tizen-studio_5.6/web-cli_Tizen_Studio_5.6_ubuntu-64.bin
       TIZEN_SDK_FILENAME: tizen-studio-installer.bin
+      TIZEN_STUDIO_PATH: ${{ github.workspace }}/tizen-studio
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,4 +34,10 @@ jobs:
         run: chmod a+x $TIZEN_SDK_FILENAME
 
       - name: Install Tizen Studio
-        run: ./tizen-studio-installer.bin --accept-license "$GITHUB_WORKSPACE/tizen-studio"
+        run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "${{ env.TIZEN_STUDIO_PATH }}"
+
+      - name: Export Tizen Studio path
+        run: PATH=$PATH:${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin
+
+      - name: Log the Tizen CLI version
+        run: tizen version
