@@ -33,4 +33,4 @@ jobs:
         run: chmod +x $TIZEN_SDK_FILENAME
 
       - name: Install Tizen Studio
-        run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "$HOME/tizen-studio"
+        run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license $HOME/tizen-studio
