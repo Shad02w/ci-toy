@@ -1,0 +1,32 @@
+name: Tizen build
+
+on:
+  push:
+    branches:
+      - tizen
+jobs:
+  build:
+    name: Build Tizen App
+    runs-on: ubuntu-latest
+    env:
+      TIZEN_SDK_URL: https://download.tizen.org/sdk/Installer/tizen-studio_5.6/web-cli_Tizen_Studio_5.6_ubuntu-64.bin
+      TIZEN_SDK_FILENAME: tizen-studio-installer.bin
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get hash of Tizen SDK installer URL
+        run: echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: Cache Tizen SDK installer
+        id: cache-tizen-sdk
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.TIZEN_SDK_FILENAME }}
+          key: ${{ runner.os }}-tizen-sdk-${{ env.TIZEN_SDK_SHA256 }}
+
+      - name: Download Tizen SDK installer
+        if: steps.cache-tizen-sdk.outputs.cache-hit != 'true'
+        run: curl -o $TIZEN_SDK_FILENAME "$TIZEN_SDK_URL"
+
+      # Add your next steps here, such as installing the SDK and building your app
