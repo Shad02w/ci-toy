@@ -33,4 +33,4 @@ jobs:
         run: chmod +x $TIZEN_SDK_FILENAME
 
       - name: Show license
-        run: ${{ env.TIZEN_SDK_FILENAME }} --show-license
+        run: ./${{ env.TIZEN_SDK_FILENAME }} --show-license
