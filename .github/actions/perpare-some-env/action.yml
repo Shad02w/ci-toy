@@ -4,10 +4,6 @@ description: Prepare some env
 runs:
   using: "composite"
   steps:
-    - name: Echo current github action path
-      shell: bash
-      run: echo ${{ github.action_path }}
-
     - name: Run external bash script
       shell: bash
-      run: bash .github/actions/perpare-some-env/random.sh
+      run: bash ${{ github.action_path }}/random.sh
