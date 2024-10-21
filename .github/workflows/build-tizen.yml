@@ -13,8 +13,6 @@ jobs:
       TIZEN_SDK_FILENAME: tizen-studio-installer.bin
       TIZEN_STUDIO_PATH: ${{ github.workspace }}/tizen-studio
     steps:
-
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -52,6 +50,10 @@ jobs:
 
       - name: Log the Tizen CLI version
         run: tizen version
+
+      - name: list the dist
+        working-directory: app/web
+        run: ls -la dist
 
       - name: Tizen Build the application
         working-directory: app/web
