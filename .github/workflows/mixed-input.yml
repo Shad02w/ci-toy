@@ -1,9 +1,6 @@
 name: Mixed inputs
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - nx-release-zip
 
 jobs:
   greet:
