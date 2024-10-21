@@ -1,0 +1,19 @@
+name: Build with custom bash script action
+
+on:
+  push:
+    branches:
+      - nx-release-zip
+
+jobs:
+  build:
+    name: Build and Test (NX)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Perpare some env
+        uses: ./.github/actions/perpare-some-env
+

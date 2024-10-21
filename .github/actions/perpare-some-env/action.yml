@@ -1,0 +1,9 @@
+name: Prepare some env
+description: Prepare some env
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run external bash script
+      shell: bash
+      run: bash .github/actions/perpare-some-env/random.sh
