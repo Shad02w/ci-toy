@@ -49,7 +49,7 @@ jobs:
         run: pnpm install
 
       - name: Build the application
-        run: npx nx build
+        run: npx nx build web
 
       - name: Tizen Build the application
         working-directory: apps/web
