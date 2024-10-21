@@ -1,0 +1,37 @@
+name: Prepare Tizen CLI
+description: Prepare Tizen CLI
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get hash of Tizen SDK installer URL
+      shell: bash
+      run: echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
+
+    - name: Cache Tizen SDK installer
+      id: cache-tizen-sdk
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.TIZEN_SDK_FILENAME }}
+        key: ${{ runner.os }}-tizen-sdk-${{ env.TIZEN_SDK_SHA256 }}
+
+    - name: Download Tizen SDK installer
+      shell: bash
+      if: steps.cache-tizen-sdk.outputs.cache-hit != 'true'
+      run: curl -o $TIZEN_SDK_FILENAME "$TIZEN_SDK_URL"
+
+    - name: Make Tizen SDK executable
+      shell: bash
+      run: chmod a+x $TIZEN_SDK_FILENAME
+
+    - name: Install Tizen Studio
+      shell: bash
+      run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "${{ env.TIZEN_STUDIO_PATH }}"
+
+    - name: Export Tizen Studio path
+      shell: bash
+      run: echo "${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin" >> $GITHUB_PATH
+
+    - name: Log the Tizen CLI version
+      shell: bash
+      run: tizen version
