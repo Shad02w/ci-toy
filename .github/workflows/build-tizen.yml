@@ -13,9 +13,6 @@ jobs:
       TIZEN_SDK_FILENAME: tizen-studio-installer.bin
       TIZEN_STUDIO_PATH: ${{ github.workspace }}/tizen-studio
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Get hash of Tizen SDK installer URL
         run: echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
 
@@ -41,3 +38,7 @@ jobs:
 
       - name: Log the Tizen CLI version
         run: tizen version
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
