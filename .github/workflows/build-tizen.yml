@@ -52,7 +52,7 @@ jobs:
         run: npx nx build web
 
       - name: Tizen Build the application
-        working-directory: apps/web
+        working-directory: app/web
         run: tizen build-web dist
 
       - name: list the dist .buildResult
