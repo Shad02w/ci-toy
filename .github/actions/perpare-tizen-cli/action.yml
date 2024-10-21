@@ -5,13 +5,12 @@ runs:
   using: "composite"
   steps:
     - name: Get hash of Tizen SDK installer URL
-      env:
-        TIZEN_SDK_URL: https://download.tizen.org/sdk/Installer/tizen-studio_5.6/web-cli_Tizen_Studio_5.6_ubuntu-64.bin
       shell: bash
       run: |
-        && echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV 
+        echo "TIZEN_SDK_URL=https://download.tizen.org/sdk/Installer/tizen-studio_5.6/web-cli_Tizen_Studio_5.6_ubuntu-64.bin" >> $GITHUB_ENV \
         && echo "TIZEN_SDK_FILENAME=tizen-studio-installer.bin" >> $GITHUB_ENV \
         && echo "TIZEN_STUDIO_PATH=${{ github.workspace }}/tizen-studio" >> $GITHUB_ENV \
+        && echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV 
 
     - name: Cache Tizen SDK installer
       id: cache-tizen-sdk
