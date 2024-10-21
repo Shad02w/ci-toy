@@ -13,6 +13,20 @@ jobs:
       TIZEN_SDK_FILENAME: tizen-studio-installer.bin
       TIZEN_STUDIO_PATH: ${{ github.workspace }}/tizen-studio
     steps:
+
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-and-pnpm
+
+      - name : Install dependencies
+        run: pnpm install
+
+      - name: Build the application
+        run: npx nx build web
+
       - name: Get hash of Tizen SDK installer URL
         run: echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
 
@@ -35,21 +49,6 @@ jobs:
 
       - name: Export Tizen Studio path
         run: echo "${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin" >> $GITHUB_PATH
-
-      - name: Log the Tizen CLI version
-        run: tizen version
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup node and pnpm
-        uses: ./.github/actions/setup-node-and-pnpm
-
-      - name : Install dependencies
-        run: pnpm install
-
-      - name: Build the application
-        run: npx nx build web
 
       - name: Log the Tizen CLI version
         run: tizen version
