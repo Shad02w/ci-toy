@@ -32,5 +32,5 @@ jobs:
       - name: Make Tizen SDK executable
         run: chmod +x $TIZEN_SDK_FILENAME
 
-      - name: Show license
-        run: ./${{ env.TIZEN_SDK_FILENAME }} --show-license
+      - name: Install Tizen Studio
+        run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "$HOME/tizen-studio"
