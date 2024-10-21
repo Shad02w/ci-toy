@@ -42,3 +42,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup node and pnpm
+        uses: .github/actions/setup-node-and-pnpm
+
+      - name : Install dependencies
+        run: pnpm install
+
+      - name: Build the application
+        run: pnpm build
+
+      - name: Tizen Build the application
+        run: tizen build-web dist
+
+      - name: list the dist .buildResult
+        run: ls -la dist/.buildResult
+
