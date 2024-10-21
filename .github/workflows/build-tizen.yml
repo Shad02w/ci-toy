@@ -18,7 +18,7 @@ jobs:
 
       - name: Cache Tizen SDK installer
         id: cache-tizen-sdk
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.TIZEN_SDK_FILENAME }}
           key: ${{ runner.os }}-tizen-sdk-${{ env.TIZEN_SDK_SHA256 }}
