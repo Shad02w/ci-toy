@@ -37,7 +37,7 @@ jobs:
         run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "${{ env.TIZEN_STUDIO_PATH }}"
 
       - name: Export Tizen Studio path
-        run: PATH=$PATH:${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin
+        run: echo "${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin" >> $GITHUB_PATH
 
       - name: Log the Tizen CLI version
         run: tizen version
