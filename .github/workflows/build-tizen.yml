@@ -28,6 +28,9 @@ jobs:
         working-directory: app/web
         run: tizen build-web -- ./dist
 
+      - name: list the current directory
+        run: ls -la
+
       - name: list the dist .buildResult
         working-directory: app/web
         run: ls -la ./dist/.buildResult
