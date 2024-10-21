@@ -51,8 +51,12 @@ jobs:
       - name: Build the application
         run: npx nx build web
 
+      - name: Log the Tizen CLI version
+        run: tizen version
+
       - name: Tizen Build the application
-        run: tizen build-web app/web/dist
+        working-directory: app/web
+        run: tizen build-web -- ./dist
 
       - name: list the dist .buildResult
         run: ls -la dist/.buildResult
