@@ -42,16 +42,28 @@ jobs:
           channel-id: "C07T2NMS49H"
           payload: |
             {
-              "text": "Deployment finished (Completed)",
-              "attachments": [
+              "blocks": [
                 {
-                  "pretext": "Deployment finished",
-                  "color": "28a745",
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Deployment finished (Completed)",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deployment finished"
+                  }
+                },
+                {
+                  "type": "section",
                   "fields": [
                     {
-                      "title": "Status",
-                      "short": true,
-                      "value": "Completed"
+                      "type": "mrkdwn",
+                      "text": "*Status*\nCompleted"
                     }
                   ]
                 }
