@@ -55,14 +55,18 @@ jobs:
 
       - name: Tizen package the application
         working-directory: app/web
-        id: package
         run:  |
           tizen package -t wgt -o out -- ./dist/.buildResult 
-          filename=$(ls out/*.wgt)
+
+      - name: Get the file
+        working-directory: app/web/out
+        id: get-filename
+        run: |
+          filename=$(ls *.wgt)
           echo "filename=$filename" >> $GITHUB_OUTPUT
 
       - name: Upload the zipped dist folder
         uses: actions/upload-artifact@v4
         with:
           name: web
-          path: app/web/out/${{ steps.package.outputs.filename }}
+          path: app/web/out/${{ steps.get-filename.outputs.filename }}
