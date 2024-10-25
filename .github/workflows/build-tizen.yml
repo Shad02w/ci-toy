@@ -29,6 +29,8 @@ jobs:
         with:
           name: docs-source.zip
           path: docs.zip
+          compression-level: 0
+          if-no-files-found: error
 
   build-tizen:
     name: Build Tizen App
@@ -68,5 +70,17 @@ jobs:
       - name: Upload the zipped dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: game.gotha.wgt
+          name: game
           path: app/web/out/${{ steps.get-filename.outputs.filename }}
+          compression-level: 0
+          if-no-files-found: error
+
+  release: 
+    name: Send a release message to Slack
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dowload the artifact
+        uses: actions/download-artifact@v4
+
+
