@@ -5,7 +5,32 @@ on:
     branches:
       - tizen-build
 jobs:
-  build:
+  build-docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-and-pnpm
+
+      - name : Install dependencies
+        run: pnpm install
+
+      - name: Build the application
+        run: npx nx build docs
+
+      - name: Zip the dist folder
+        run: zip -r docs.zip app/docs/dist
+
+      - name: Upload the zipped dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: docs.zip
+
+  build-tizen:
     name: Build Tizen App
     runs-on: ubuntu-latest
     steps:
@@ -30,44 +55,14 @@ jobs:
 
       - name: Tizen package the application
         working-directory: app/web
+        id: package
         run:  |
-          tizen package -t wgt -o out -- ./dist/.buildResult \
-          && ls -la out
+          tizen package -t wgt -o out -- ./dist/.buildResult 
+          filename=$(ls out/*.wgt)
+          echo "filename=$filename" >> $GITHUB_OUTPUT
 
-      - name: Slack Notification
-        uses: slackapi/slack-github-action@v1.27.0
+      - name: Upload the zipped dist folder
+        uses: actions/upload-artifact@v4
         with:
-          # Unlike the step posting a new message, this step does not accept a channel name.
-          # Please use a channel ID, not a name here.
-          channel-id: "C07T2NMS49H"
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "Deployment finished (Completed)",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Deployment finished"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Status*\nCompleted"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          name: web
+          path: app/web/out/${{ steps.package.outputs.filename }}
