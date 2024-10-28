@@ -82,8 +82,9 @@ async function postMessage({
 
 async function uploadFiles({ files, channelId, client }: { files: string[]; channelId: string; client: WebClient }) {
     const { files: uploadedFiles } = await client.filesUploadV2({
-        channels: channelId,
+        channel_id: channelId,
         file_uploads: files.map(file => ({
+            filename: path.basename(file),
             file: fs.createReadStream(file)
         }))
     })

@@ -21,7 +21,7 @@ jobs:
         run: pnpm install
 
       - name: Build the application
-        run: npx nx build docs
+        run: npx nx build docs --verbose
 
       - name: Zip the dist folder
         run: zip -r docs.zip ${{ env.WORKSPACE_PATH }}/dist
@@ -49,7 +49,7 @@ jobs:
         run: pnpm install
 
       - name: Build the application
-        run: npx nx build web
+        run: npx nx build web --verbose
 
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
@@ -108,6 +108,7 @@ jobs:
       - name: Notify
         run: |
           build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
+          ls -la $build_dir
           npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
