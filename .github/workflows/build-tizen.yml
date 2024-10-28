@@ -27,7 +27,7 @@ jobs:
       - name: Upload the zipped dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: docs-source.zip
+          name: docs
           path: docs.zip
           if-no-files-found: error
 
@@ -89,11 +89,11 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: ls artifacts
-        run: ls -la ./artifacts
+      - name: Get all the single files
+        run:  |
+          unzip -l ./artifacts/docs -d ./artifacts/builds
+          unzip -l ./artifacts/tizen -d ./artifacts/builds
 
-      # - name: Slack Notification
-      #   uses: slackapi/slack-github-action@v1.27.0
-    
-
+      - name: list the files
+        run: ls -la ./artifacts/builds
 
