@@ -97,9 +97,9 @@ jobs:
           merge-multiple: true
 
       - name: Upload files to Slack
-        uses: adrey/slack-file-upload-action@master
+        uses: MeilCli/slack-upload-file@v4
         with:
-          token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-          path: ./build-assets
+          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel_id: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+          file_path: "./build-assets/*"
           initial_comment: "Build artifacts from GitHub Actions"
