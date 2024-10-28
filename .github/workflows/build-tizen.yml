@@ -87,16 +87,7 @@ jobs:
       - name: Download the artifact
         uses: actions/download-artifact@v4
         with:
-          path: ./artifacts
+          path: ./build
+          merge-files: true
 
-      - name: ls the artifacts
-        run: ls -la ./artifacts
-
-      - name: Get all the single files
-        run:  |
-          unzip ./artifacts/docs -d ./artifacts/builds
-          unzip ./artifacts/tizen -d ./artifacts/builds
-
-      - name: list the files
-        run: ls -la ./artifacts/builds
 
