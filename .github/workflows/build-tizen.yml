@@ -29,7 +29,6 @@ jobs:
         with:
           name: docs-source.zip
           path: docs.zip
-          compression-level: 0
           if-no-files-found: error
 
   build-tizen:
@@ -69,14 +68,13 @@ jobs:
         run: echo "hashed_filename=$(game-gotham-${{ steps.ctv-version-and-hash.outputs.version }}-${{ steps.ctv-version-and-hash.outputs.hash }})" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
-        run: mv $(ls apps/ctv/out/*.wgt) apps/ctv/out/${{ steps.hashed-filename.outputs.hashed_filename }}.wgt
+        run: mv $(ls app/web/out/*.wgt) app/web/out/${{ steps.hashed-filename.outputs.hashed_filename }}.wgt
 
       - name: Upload the wgt file
         uses: actions/upload-artifact@v4
         with:
           name: game
           path: app/web/out/*
-          compression-level: 0
           if-no-files-found: error
 
   release: 
