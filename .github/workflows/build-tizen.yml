@@ -65,12 +65,11 @@ jobs:
 
       - name: Calculate package filename
         id: package-filename
-        run: echo "filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }})" >> $GITHUB_OUTPUT
+        run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
         run: |
-          echo "${{ steps.package-filename.outputs.filename }}"
-          mv app/web/out/*.wgt app/web/out/just-a-test.wgt
+          mv $(ls app/web/out/*.wgt) app/web/out/${{ steps.package-filename.outputs.filename }}.wgt
 
       - name: Upload the wgt file
         uses: actions/upload-artifact@v4
