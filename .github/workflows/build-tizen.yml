@@ -5,6 +5,14 @@ on:
     branches:
       - tizen-build
 jobs:
+  log-message:
+    name: Log the message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        uses: ./.github/actions/ci-notifier
+
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
