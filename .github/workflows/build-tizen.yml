@@ -69,9 +69,8 @@ jobs:
 
       - name: Rename wgt file
         run: |
-          filename="${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
-          echo "$filename"
-          mv app/web/out/*.wgt "$filename"
+          echo "${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
+          mv app/web/out/*.wgt just-randome-filename.wgt
 
       - name: Upload the wgt file
         uses: actions/upload-artifact@v4
