@@ -63,19 +63,19 @@ jobs:
         id: versioning
         uses: ./.github/actions/get-ctv-version-and-hash
 
-      - name: Calculate hashed wgt filename
-        id: calculated-filename
-        run: echo "hashed_filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }})" >> $GITHUB_OUTPUT
+      - name: Calculate package filename
+        id: package-filename
+        run: echo "filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }})" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
         run: |
-          echo "${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
-          mv app/web/out/*.wgt just-randome-filename.wgt
+          echo "${{ steps.package-filename.outputs.filename }}"
+          mv app/web/out/*.wgt app/web/out/just-a-test.wgt
 
       - name: Upload the wgt file
         uses: actions/upload-artifact@v4
         with:
-          name: game
+          name: tizen
           path: app/web/out/*
           if-no-files-found: error
 
