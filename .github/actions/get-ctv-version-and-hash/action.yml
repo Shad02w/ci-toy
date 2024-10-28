@@ -22,4 +22,4 @@ runs:
       shell: bash
       run: |
         branch_hash=$(git rev-parse --short HEAD)
-        echo "branch_hash=$branch_hash" >> $GITHUB_OUTPUT
+        echo "hash=$branch_hash" >> $GITHUB_OUTPUT
