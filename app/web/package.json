@@ -9,7 +9,8 @@
         "format": "prettier --ignore-path ../../.prettierignore --check ./src",
         "test": "echo test",
         "lint": "eslint ./src",
-        "format:write": "prettier --write ."
+        "format:write": "prettier --write .",
+        "ci-notify": "tsx ./script/notifier.ts"
     },
     "dependencies": {
         "@feature/config": "workspace:*",
@@ -19,6 +20,10 @@
         "@rsbuild/core": "1.0.0-alpha.4",
         "@rsbuild/plugin-babel": "1.0.0-alpha.4",
         "@rsbuild/plugin-solid": "1.0.0-alpha.4",
-        "@rsbuild/plugin-type-check": "1.0.0-alpha.4"
+        "@rsbuild/plugin-type-check": "1.0.0-alpha.4",
+        "@slack/web-api": "7.7.0",
+        "@types/yargs": "17.0.33",
+        "tsx": "4.19.2",
+        "yargs": "17.7.2"
     }
 }

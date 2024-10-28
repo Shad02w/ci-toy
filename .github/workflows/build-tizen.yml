@@ -5,16 +5,6 @@ on:
     branches:
       - tizen-build
 jobs:
-  log-message:
-    name: Log the message
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Notify
-        uses: ./.github/actions/ci-notifier
-
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
@@ -106,16 +96,26 @@ jobs:
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Download the artifact
         uses: actions/download-artifact@v4
         with:
           path: ${{ env.ACTIFACTS_OUTPUT_PATH }}
           merge-multiple: true
 
-      - name: Upload files to Slack
-        uses: MeilCli/slack-upload-file@v4
-        with:
-          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel_id: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-          file_path: "${{ env.ACTIFACTS_OUTPUT_PATH }}/*"
-          initial_comment: "Build artifacts from GitHub Actions"
+      - name: Notify
+        run: |
+          npx nx run web:ci-notify 
+            --token ${{ secrets.SLACK_BOT_TOKEN }} \
+            --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
+            --directory ${{ env.ACTIFACTS_OUTPUT_PATH }}
+
+      # - name: Upload files to Slack
+      #   uses: MeilCli/slack-upload-file@v4
+      #   with:
+      #     slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+      #     channel_id: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+      #     file_path: "${{ env.ACTIFACTS_OUTPUT_PATH }}/*"
+      #     initial_comment: "Build artifacts from GitHub Actions"

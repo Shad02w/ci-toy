@@ -10,14 +10,15 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.6.0",
+        "@types/node": "22.8.2",
         "es-check": "^7.2.1",
         "eslint": "^9.6.0",
         "globals": "^15.8.0",
+        "nx": "19.4.1",
         "prettier": "^3.3.2",
         "prettier-plugin-astro": "^0.14.0",
         "typescript": "^5.5.2",
-        "typescript-eslint": "^7.15.0",
-        "nx": "19.4.1"
+        "typescript-eslint": "^7.15.0"
     },
     "packageManager": "pnpm@9.4.0"
 }
