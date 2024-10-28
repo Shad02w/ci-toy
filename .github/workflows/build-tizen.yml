@@ -84,6 +84,9 @@ jobs:
     needs: [build-docs, build-tizen]
 
     steps:
+      - name : Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download the artifact
         uses: actions/download-artifact@v4
         with:
