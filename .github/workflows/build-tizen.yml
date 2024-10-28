@@ -89,10 +89,13 @@ jobs:
         with:
           path: ./artifacts
 
+      - name: ls the artifacts
+        run: ls -la ./artifacts
+
       - name: Get all the single files
         run:  |
-          unzip -l ./artifacts/docs -d ./artifacts/builds
-          unzip -l ./artifacts/tizen -d ./artifacts/builds
+          unzip ./artifacts/docs -d ./artifacts/builds
+          unzip ./artifacts/tizen -d ./artifacts/builds
 
       - name: list the files
         run: ls -la ./artifacts/builds
