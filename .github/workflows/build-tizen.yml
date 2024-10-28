@@ -24,6 +24,15 @@ jobs:
       - name: Zip the dist folder
         run: zip -r docs.zip app/docs/dist
 
+      - name: Calculate hashed wgt filename
+        id: calculated-filename
+        run: echo "hashed_filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }})" >> $GITHUB_OUTPUT
+
+      - name: Echo filename
+        run: |
+          filename="${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
+          echo $filename
+
       - name: Upload the zipped dist folder
         uses: actions/upload-artifact@v4
         with:
@@ -65,12 +74,13 @@ jobs:
 
       - name: Calculate hashed wgt filename
         id: calculated-filename
-        run: echo "hashed_filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.ctv-versioning.outputs.hash }})" >> $GITHUB_OUTPUT
+        run: echo "hashed_filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }})" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
         run: |
-          hashed_filename="${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
-          mv $(ls app/web/out/*.wgt) $hashed_filename
+          filename="${{ steps.calculated-filename.outputs.hashed_filename }}.wgt"
+          echo $filename
+          mv $(ls app/web/out/*.wgt) $filename
 
       - name: Upload the wgt file
         uses: actions/upload-artifact@v4
