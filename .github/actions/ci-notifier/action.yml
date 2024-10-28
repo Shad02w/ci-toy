@@ -1,5 +1,5 @@
 name: CI Notifier
-description: Sends a notification to the CI notifier
+description: Sends a notification to Slack when a CI build is completed, it includes the build artifacts and changelog
 inputs:
   file_path:
     description: The path to the build asssets to be uploaded
@@ -8,5 +8,5 @@ inputs:
   channel_id:
     description: The Slack channel ID to send the notification to
 runs:
-  using: "node20"
-  main: ${{ github.action_path }}/main.js
+  using: node20
+  main: ./main.js
