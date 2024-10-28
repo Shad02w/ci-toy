@@ -93,6 +93,9 @@ jobs:
           path: ~/builds
           merge-files: true
 
+      - name: List builds 
+        run: ls -la ~/builds
+
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
 
