@@ -87,13 +87,16 @@ jobs:
       - name: Download the artifact
         uses: actions/download-artifact@v4
         with:
-          path: ./build
+          path: ~/builds
           merge-files: true
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-and-pnpm
 
       - name: Upload files to Slack
         uses: adrey/slack-file-upload-action@master
         with:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-          path: ./build/*
+          path: ~/builds
           initial_comment: "Build artifacts from GitHub Actions"
