@@ -107,7 +107,7 @@ jobs:
 
       - name: Notify
         run: |
-          npx nx run web:ci-notify 
+          npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
             --directory ${{ env.ACTIFACTS_OUTPUT_PATH }}
