@@ -84,25 +84,25 @@ jobs:
     needs: [build-docs, build-tizen]
 
     steps:
-      - name : Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download the artifact
-        uses: actions/download-artifact@v4
-        with:
-          path: ~/builds
-          merge-multiple: true
-
-      - name: List builds 
+      - name: List builds
         run: ls -la ~/builds
 
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
+
+      - name: Download the artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./build-assets
+          merge-multiple: true
 
       - name: Upload files to Slack
         uses: adrey/slack-file-upload-action@master
         with:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           channel: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-          path: ~/builds
+          path: ./build-assets
           initial_comment: "Build artifacts from GitHub Actions"
