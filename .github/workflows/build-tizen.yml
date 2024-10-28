@@ -12,7 +12,6 @@ jobs:
       - name: Notify
         uses: ./.github/actions/ci-notifier
 
-
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
