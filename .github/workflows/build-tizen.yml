@@ -1,4 +1,4 @@
-name: Tizen build
+name: Docs and tizen build
 
 on:
   push:
@@ -60,27 +60,41 @@ jobs:
         run:  |
           tizen package -t wgt -o out -- ./dist/.buildResult 
 
-      - name: Get the file
-        working-directory: app/web/out
-        id: get-filename
-        run: |
-          filename=$(ls *.wgt)
-          echo "filename=$filename" >> $GITHUB_OUTPUT
+      - name: Get CTV version and build hash
+        id: ctv-version
+        uses: ./.github/actions/get-ctv-version-and-hash
 
-      - name: Upload the zipped dist folder
+      - name: Calculate hashed wgt filename
+        id: hashed-filename
+        run: echo "hashed_filename=$(game-gotham-${{ steps.ctv-version-and-hash.outputs.version }}-${{ steps.ctv-version-and-hash.outputs.hash }})" >> $GITHUB_OUTPUT
+
+      - name: Rename wgt file
+        run: mv $(ls apps/ctv/out/*.wgt) apps/ctv/out/${{ steps.hashed-filename.outputs.hashed_filename }}.wgt
+
+      - name: Upload the wgt file
         uses: actions/upload-artifact@v4
         with:
           name: game
-          path: app/web/out/${{ steps.get-filename.outputs.filename }}
+          path: app/web/out/*
           compression-level: 0
           if-no-files-found: error
 
   release: 
     name: Send a release message to Slack
     runs-on: ubuntu-latest
+    needs: [build-docs, build-tizen]
 
     steps:
-      - name: Dowload the artifact
+      - name: Download the artifact
         uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: ls artifacts
+        run: ls -la ./artifacts
+
+      # - name: Slack Notification
+      #   uses: slackapi/slack-github-action@v1.27.0
+    
 
 

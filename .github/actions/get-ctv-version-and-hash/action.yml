@@ -1,0 +1,25 @@
+name: Get CTV Version and build hash
+description: Extracts the version number from the package.json file and generate a short hash of the current branch
+outputs:
+  version:
+    description: The version number of the CTV app
+    value: ${{ steps.app-version.outputs.version }}
+  hash:
+    description: The short hash of the latest commit on the current branch
+    value: ${{ steps.branch-hash.outputs.branch_hash }}
+runs:
+  using: composite
+  steps:
+    - name: Get CTV Version
+      id: app-version
+      shell: bash
+      run: |
+        version=$(node -p "require('./app/web/package.json').version")
+        echo "version=$version" >> $GITHUB_OUTPUT
+
+    - name: Get branch short hash
+      id: branch-hash
+      shell: bash
+      run: |
+        branch_hash=$(git rev-parse --short HEAD)
+        echo "branch_hash=$branch_hash" >> $GITHUB_OUTPUT
