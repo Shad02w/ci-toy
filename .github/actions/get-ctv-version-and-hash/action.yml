@@ -6,7 +6,7 @@ outputs:
     value: ${{ steps.app-version.outputs.version }}
   hash:
     description: The short hash of the latest commit on the current branch
-    value: ${{ steps.branch-hash.outputs.branch_hash }}
+    value: ${{ steps.branch-hash.outputs.hash }}
 runs:
   using: composite
   steps:
@@ -22,5 +22,4 @@ runs:
       shell: bash
       run: |
         branch_hash=$(git rev-parse --short HEAD)
-        echo $branch_hash
         echo "hash=$branch_hash" >> $GITHUB_OUTPUT
