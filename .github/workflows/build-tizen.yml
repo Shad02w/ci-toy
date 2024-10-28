@@ -60,12 +60,12 @@ jobs:
           tizen package -t wgt -o out -- ./dist/.buildResult 
 
       - name: Get CTV version and build hash
-        id: ctv-version
+        id: versioning
         uses: ./.github/actions/get-ctv-version-and-hash
 
       - name: Calculate hashed wgt filename
         id: hashed-filename
-        run: echo "hashed_filename=$(game-gotham-${{ steps.ctv-version-and-hash.outputs.version }}-${{ steps.ctv-version-and-hash.outputs.hash }})" >> $GITHUB_OUTPUT
+        run: echo "hashed_filename=$(game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.ctv-versioning.outputs.hash }})" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
         run: mv $(ls app/web/out/*.wgt) app/web/out/${{ steps.hashed-filename.outputs.hashed_filename }}.wgt
