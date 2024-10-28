@@ -92,7 +92,7 @@ jobs:
 
       - name: List the build directory
         run: |
-          echo "builds=$(ls ./build)" >> $GITHUB_OUTPUT
+          echo "builds=$(ls ./build | tr '\n' ',')" >> $GITHUB_OUTPUT
 
       - name: Send a release message to Slack
         uses: slackapi/slack-github-action@v1.27.0
