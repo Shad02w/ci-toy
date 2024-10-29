@@ -18,6 +18,9 @@ jobs:
       - name: Log git fetched commits
         run: git rev-list --count HEAD
 
+      - name: Log details of one commit
+        run: git show e8825109a7d393c81df5f44cf74c5f4990483e9b
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
