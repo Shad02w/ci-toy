@@ -69,6 +69,7 @@ async function postMessage({
 async function uploadFiles({ files, channelId, client }: { files: string[]; channelId: string; client: WebClient }) {
     const { files: uploadedFiles } = await client.filesUploadV2({
         channel_id: channelId,
+        initial_comment: "Release notes",
         file_uploads: files.map(file => ({
             filename: path.basename(file),
             file: fs.createReadStream(file)
@@ -119,6 +120,6 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 }
 
 async function getChangelog(): Promise<KnownBlock[]> {
-    const result = execSync("npx changelogen@latest --from 8086a558")
+    const result = execSync("npx changelogen@latest --from e882510")
     return await markdownToBlocks(result.toString())
 }
