@@ -19,3 +19,6 @@ jobs:
 
       - name: Get the latest commits
         run: git log --oneline
+
+      - name: Get commit message of HEAD
+        run: git log --format=%B -n 1 HEAD
