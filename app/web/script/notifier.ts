@@ -26,7 +26,7 @@ const options = yargs(hideBin(process.argv))
         type: "string"
     })
     .option("tag", {
-        desc: "pattern of previous tag, will be use to determine the starting point of the changelog",
+        desc: "glob pattern of last tag, will be use to determine the starting point of the changelog",
         type: "string",
         demandOption: true
     })

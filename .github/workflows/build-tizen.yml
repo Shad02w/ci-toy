@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - tizen-build
+    tags:
+      - ctv-v*
+
 jobs:
   build-docs:
     name: Build Docs
