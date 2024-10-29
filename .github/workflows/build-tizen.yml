@@ -5,6 +5,19 @@ on:
     branches:
       - tizen-build
 jobs:
+  log-git-status:
+    name: Log git status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log git status
+        run: git status
+
+      - name: Log git fetched commits
+        run: git rev-list --count HEAD
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
@@ -95,6 +108,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: get fetched commits count
+        run: git rev-list --count HEAD
+
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
 
@@ -106,6 +122,7 @@ jobs:
         with:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
+
 
       - name: Notify
         run: |
