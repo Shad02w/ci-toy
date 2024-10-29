@@ -4,7 +4,7 @@ import { hideBin } from "yargs/helpers"
 import fs from "node:fs"
 import { WebClient, type Block, type KnownBlock } from "@slack/web-api"
 import path from "node:path"
-import { spawnSync } from "node:child_process"
+// import { spawnSync } from "node:child_process"
 import { generateMarkDown, getGitDiff, loadChangelogConfig, parseCommits } from "changelogen"
 
 const options = yargs(hideBin(process.argv))
@@ -135,13 +135,13 @@ async function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-function runCommand(command: string, options: string[]): string {
-    const result = spawnSync(command, options, { shell: true })
-    if (result.status !== 0 || result.stderr) {
-        throw new Error(`Command: '${command} ${options}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
-    }
-    return result.output.toString()
-}
+// function runCommand(command: string, options: string[]): string {
+//     const result = spawnSync(command, options, { shell: true })
+//     if (result.status !== 0 || result.stderr) {
+//         throw new Error(`Command: '${command} ${options}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
+//     }
+//     return result.output.toString()
+// }
 
 async function generateChangelogMarkdown(from: string, to: string) {
     const config = await loadChangelogConfig(process.cwd())
