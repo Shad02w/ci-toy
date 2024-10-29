@@ -126,10 +126,12 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 }
 
 async function getChangelog(): Promise<KnownBlock[]> {
-    runCommand("git", ["show", "e882510"])
-    runCommand("git", ["show", "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"])
+    const from = "e8825109a7d393c81df5f44cf74c5f4990483e9b"
+    const to = "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"
+    runCommand("git", ["show", from])
+    runCommand("git", ["show", to])
 
-    const changelog = await generateChangelogMarkdown("e882510", "7f390fa6ccd403b42eb7ab67288c3c700f558cc3")
+    const changelog = await generateChangelogMarkdown(from, to)
     console.log(`changelog\n${changelog}`)
     return await markdownToBlocks(changelog)
 }
