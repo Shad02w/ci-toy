@@ -74,9 +74,9 @@ async function postMessage({
 }) {
     const { threadId } = await uploadFiles({ files, channelId, client })
 
-    return await client.chat.postMessage({
+    return await client.chat.update({
         channel: channelId,
-        thread_ts: threadId,
+        ts: threadId,
         blocks
     })
 }
