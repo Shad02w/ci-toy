@@ -2,13 +2,12 @@ name: Test CI
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
-  delete:
-    tags:
-      - 'v*'
-    
+  # push:
+  #   tags:
+  #     - 'v*'
+  # delete:
+  #   tags:
+  #     - 'v*'
 
 jobs:
   test-ci:
