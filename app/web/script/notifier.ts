@@ -42,8 +42,8 @@ async function run() {
         throw new Error(`Directory ${directory} does not exist`)
     }
 
-    const files = await fs.promises.readdir(directory)
-    console.log("paths", files)
+    let files = await fs.promises.readdir(directory)
+    files = files.map(file => path.join(directory, file))
 
     postMessage({
         files,
