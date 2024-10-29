@@ -107,7 +107,7 @@ jobs:
 
       - name: GIt show
         run: |
-          git show e882510
+          git show e8825109a7d393c81df5f44cf74c5f4990483e9b
           git show 7f390fa6ccd403b42eb7ab67288c3c700f558cc3
 
       - name: Notify
