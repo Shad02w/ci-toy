@@ -5,28 +5,6 @@ on:
     branches:
       - tizen-build
 jobs:
-  log-git-status:
-    name: Log git status
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      - name: Log git status
-        run: git status
-
-      - name: Log git fetched commits
-        run: git rev-list --count HEAD
-
-      - name: Log details of one commit
-        run: git show e8825109a7d393c81df5f44cf74c5f4990483e9b
-
-      - name: Log details of another commits
-        run: git --no-pager log "e8825109a7d393c81df5f44cf74c5f4990483e9b...7f390fa6ccd403b42eb7ab67288c3c700f558cc3" --pretty="----%n%s|%h|%an|%ae%n%b" --name-status
-
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
@@ -142,12 +120,5 @@ jobs:
           npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
-            --directory $build_dir
-
-      # - name: Upload files to Slack
-      #   uses: MeilCli/slack-upload-file@v4
-      #   with:
-      #     slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-      #     channel_id: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-      #     file_path: "${{ env.ACTIFACTS_OUTPUT_PATH }}/*"
-      #     initial_comment: "Build artifacts from GitHub Actions"
+            --directory $build_dir \
+            --tag "ctv-v*"

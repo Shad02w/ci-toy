@@ -25,9 +25,10 @@ const options = yargs(hideBin(process.argv))
         demandOption: true,
         type: "string"
     })
-    .option("form", {
-        desc: "The form data to be sent",
-        type: "string"
+    .option("tag", {
+        desc: "pattern of previous tag, will be use to determine the starting point of the changelog",
+        type: "string",
+        demandOption: true
     })
     .help("Send a notification to Slack with changelog and build artifacts")
 
@@ -36,11 +37,7 @@ async function run() {
 
     const client = new WebClient(argv.token)
 
-    const [files, blocks] = await Promise.all([getAllBuildArtifacts(argv.directory), getChangelog()])
-
-    console.log(files, blocks)
-
-    console.log("Posting message")
+    const [files, blocks] = await Promise.all([getFiles(argv.directory), getChangelog(argv.tag)])
 
     await postMessage({
         files,
@@ -89,7 +86,7 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
     let threadId: string | undefined = undefined
     let MAX_RETRIES = 20
 
-    // Do a polling to wait utils the thread id in 'shares' property is populated in the first file object
+    // Do a polling to wait util the thread id in 'shares' property is populated in the first file object
     // ref: https://github.com/slackapi/python-slack-sdk/issues/1329#issuecomment-1430589611
     while (MAX_RETRIES) {
         const { file } = await client.files.info({
@@ -112,7 +109,7 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
     return { threadId, uploadFiles }
 }
 
-async function getAllBuildArtifacts(directory: string): Promise<string[]> {
+async function getFiles(directory: string): Promise<string[]> {
     if (!path.isAbsolute(directory)) {
         directory = path.join(process.cwd(), directory)
     }
@@ -125,37 +122,74 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
     return (files = files.map(file => path.join(directory, file)))
 }
 
-async function getChangelog(): Promise<KnownBlock[]> {
-    const from = "e8825109a7d393c81df5f44cf74c5f4990483e9b"
-    const to = "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"
-    // runCommand("git", ["show", from])
-    // runCommand("git", ["show", to])
-    console.log(runCommand("git", ["rev-list", "--count", "HEAD"]))
+async function getChangelog(tagPattern: string): Promise<KnownBlock[]> {
+    const lastTag = getLastGitTag(tagPattern)
+    const from = lastTag ? getGitCommitHash(lastTag) : getGitFirstCommitHash()
 
-    const changelog = await generateChangelogMarkdown(from, to)
-    console.log(`changelog\n${changelog}`)
+    const changelog = await generateChangelogMarkdown(from)
     return await markdownToBlocks(changelog)
 }
+
+async function generateChangelogMarkdown(from: string, to?: string) {
+    const config = await loadChangelogConfig(process.cwd())
+    const rawCommits = await getGitDiff(from, to)
+    // copy from changelogen source code
+    const commits = parseCommits(rawCommits, config)
+        .map(c => ({ ...c, type: c.type.toLowerCase() }))
+        .filter(c => config.types[c.type] && !(c.type === "chore" && c.scope === "deps" && !c.isBreaking))
+
+    return await generateMarkDown(commits, config)
+}
+
+function getLastGitTag(pattern?: string): string | null {
+    let tag: string | null = null
+    // try to get the last tag by pattern
+    try {
+        tag = getGitTag(pattern)
+    } catch (e) {
+        // no-np
+    }
+
+    // fallback to get the latest tag
+    if (!tag) {
+        try {
+            console.log(`No tag found by pattern: ${pattern}, fallback to get the latest tag`)
+            tag = getGitTag()
+        } catch (e) {
+            // no-np
+        }
+    }
+
+    return tag
+}
+
+function getGitTag(pattern?: string) {
+    return runCommand("git", ["--no-pager", "describe", pattern ? `--match="${pattern}"` : undefined, "--abbrev=0", "--tags"])
+}
+
+function getGitCommitHash(tag: string) {
+    return runCommand("git", ["rev-parse", tag])
+}
+
+function getGitFirstCommitHash() {
+    return runCommand("git", ["rev-list", "--max-parents=0", "HEAD"])
+}
+
+/**
+ * Utils
+ */
 
 async function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
-
-function runCommand(command: string, options: string[]): string {
-    const result = spawnSync(command, options, { shell: true })
+function runCommand(command: string, options: (string | null | undefined)[]): string {
+    const result = spawnSync(
+        command,
+        options.filter(_ => _ !== null && _ !== undefined),
+        { shell: true }
+    )
     if (result.status !== 0 || result.stderr.byteLength > 0) {
-        throw new Error(`Command: '${command} ${options.join(" ")}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
+        throw new Error(`Command: '${command} ${options.join(" ")}' failed with status: ${result.status}\n${result.stderr.toString()}`)
     }
     return result.stdout.toString().trim()
-}
-
-async function generateChangelogMarkdown(from: string, to: string) {
-    const config = await loadChangelogConfig(process.cwd())
-    const rawCommits = await getGitDiff(from, to)
-    const commits = parseCommits(rawCommits, config)
-        .map(c => ({ ...c, type: c.type.toLowerCase() /* #198 */ }))
-        .filter(c => config.types[c.type] && !(c.type === "chore" && c.scope === "deps" && !c.isBreaking))
-
-    const markdown = await generateMarkDown(commits, config)
-    return markdown
 }
