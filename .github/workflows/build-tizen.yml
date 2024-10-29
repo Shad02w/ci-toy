@@ -1,11 +1,12 @@
 name: Docs and tizen build
 
 on:
-  push:
-    branches:
-      - tizen-build
-    tags:
-      - ctv-v*
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - tizen-build
+  #   tags:
+  #     - ctv-v*
 
 jobs:
   build-docs:

@@ -1,0 +1,21 @@
+name: Test CI
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v*
+
+jobs:
+  test-ci:
+    name: Test CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log the ref 
+        run: echo "${{ github.ref }}"
+
+      - name: Get the latest commits
+        run: git log --oneline
