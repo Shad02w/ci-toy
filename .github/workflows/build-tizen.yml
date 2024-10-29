@@ -98,12 +98,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Log git status
-        run: git status
-
-      - name: get fetched commits count
-        run: git rev-list --count HEAD
-
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
 
