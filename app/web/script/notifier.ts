@@ -43,6 +43,7 @@ async function run() {
     }
 
     const files = await fs.promises.readdir(directory)
+    console.log("paths", files)
 
     postMessage({
         files,
