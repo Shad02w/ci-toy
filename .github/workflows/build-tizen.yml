@@ -104,6 +104,11 @@ jobs:
         with:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
+          
+      - name: GIt show
+        uses: |
+          git show e882510
+          git show 7f390fa6ccd403b42eb7ab67288c3c700f558cc3
 
       - name: Notify
         run: |
