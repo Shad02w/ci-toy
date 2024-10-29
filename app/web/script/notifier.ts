@@ -4,7 +4,7 @@ import { hideBin } from "yargs/helpers"
 import fs from "node:fs"
 import { WebClient, type Block, type KnownBlock } from "@slack/web-api"
 import path from "node:path"
-import { execSync } from "node:child_process"
+import { exec } from "node:child_process"
 
 const options = yargs(hideBin(process.argv))
     .scriptName("ci-notifier")
@@ -125,10 +125,23 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 }
 
 async function getChangelog(): Promise<KnownBlock[]> {
-    const result = execSync("npx changelogen@latest --from e882510")
-    return await markdownToBlocks(result.toString())
+    const output = await execPromise("npx changelogen@latest --from e882510")
+    return await markdownToBlocks(output)
 }
 
 async function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function execPromise(cmd: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`exec error: ${stderr}`)
+                reject(error)
+                return
+            }
+            resolve(stdout)
+        })
+    })
 }
