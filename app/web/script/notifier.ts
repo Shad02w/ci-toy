@@ -37,7 +37,11 @@ async function run() {
 
     const [files, blocks] = await Promise.all([getAllBuildArtifacts(argv.directory), getChangelog()])
 
-    postMessage({
+    console.log(files, blocks)
+
+    console.log("Posting message")
+
+    await postMessage({
         files,
         channelId: argv.channel,
         client,
