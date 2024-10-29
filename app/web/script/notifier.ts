@@ -42,7 +42,7 @@ async function run() {
         throw new Error(`Directory ${directory} does not exist`)
     }
 
-    const files = await getBuildFiles(argv.directory)
+    const files = await fs.promises.readdir(directory)
 
     postMessage({
         files,
@@ -117,10 +117,6 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
     }
 
     return { threadId, uploadFiles }
-}
-
-async function getBuildFiles(directory: string): Promise<string[]> {
-    return await fs.promises.readdir(directory)
 }
 
 run()
