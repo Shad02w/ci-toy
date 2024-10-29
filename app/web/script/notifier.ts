@@ -1,8 +1,10 @@
 import yargs from "yargs"
+import { markdownToBlocks } from "@tryfabric/mack"
 import { hideBin } from "yargs/helpers"
 import fs from "node:fs"
 import { WebClient, type Block, type KnownBlock } from "@slack/web-api"
 import path from "node:path"
+import { execSync } from "node:child_process"
 
 const options = yargs(hideBin(process.argv))
     .scriptName("ci-notifier")
@@ -33,33 +35,16 @@ async function run() {
 
     const client = new WebClient(argv.token)
 
-    let directory = argv.directory
-    if (!path.isAbsolute(directory)) {
-        directory = path.join(process.cwd(), directory)
-    }
-
-    if (!fs.existsSync(directory)) {
-        throw new Error(`Directory ${directory} does not exist`)
-    }
-
-    let files = await fs.promises.readdir(directory)
-    files = files.map(file => path.join(directory, file))
+    const [files, blocks] = await Promise.all([getAllBuildArtifacts(argv.directory), getChangelog()])
 
     postMessage({
         files,
         channelId: argv.channel,
         client,
-        blocks: [
-            {
-                type: "header",
-                text: {
-                    type: "plain_text",
-                    text: "CI Notifier"
-                }
-            }
-        ]
+        blocks
     })
 }
+run()
 
 async function postMessage({
     client,
@@ -120,4 +105,20 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
     return { threadId, uploadFiles }
 }
 
-run()
+async function getAllBuildArtifacts(directory: string): Promise<string[]> {
+    if (!path.isAbsolute(directory)) {
+        directory = path.join(process.cwd(), directory)
+    }
+
+    if (!fs.existsSync(directory)) {
+        throw new Error(`Directory ${directory} does not exist`)
+    }
+
+    let files = await fs.promises.readdir(directory)
+    return (files = files.map(file => path.join(directory, file)))
+}
+
+async function getChangelog(): Promise<KnownBlock[]> {
+    const result = execSync("npx changelogen@latest")
+    return await markdownToBlocks(result.toString())
+}

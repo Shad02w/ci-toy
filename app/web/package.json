@@ -22,6 +22,7 @@
         "@rsbuild/plugin-solid": "1.0.0-alpha.4",
         "@rsbuild/plugin-type-check": "1.0.0-alpha.4",
         "@slack/web-api": "7.7.0",
+        "@tryfabric/mack": "1.2.1",
         "@types/yargs": "17.0.33",
         "tsx": "4.19.2",
         "yargs": "17.7.2"

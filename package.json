@@ -11,6 +11,7 @@
     "devDependencies": {
         "@eslint/js": "^9.6.0",
         "@types/node": "22.8.2",
+        "changelogen": "0.5.7",
         "es-check": "^7.2.1",
         "eslint": "^9.6.0",
         "globals": "^15.8.0",
