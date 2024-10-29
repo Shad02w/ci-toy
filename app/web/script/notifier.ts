@@ -105,8 +105,7 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
         })
 
         const shareProps = file?.shares?.private?.[channelId] || file?.shares?.public?.[channelId]
-        if (shareProps) {
-            console.log(shareProps)
+        if (shareProps?.[0].ts) {
             threadId = shareProps[0].ts
             break
         }
