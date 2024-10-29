@@ -136,6 +136,7 @@ async function delay(ms: number) {
 
 function runCommand(command: string, options: string[]): string {
     const result = spawnSync(command, options, { shell: true })
+    console.log("runCommand", result)
     if (result.status !== 0) {
         throw new Error(`Command: '${command} ${options}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
     }
