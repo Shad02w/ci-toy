@@ -143,11 +143,10 @@ async function delay(ms: number) {
 
 function runCommand(command: string, options: string[]): string {
     const result = spawnSync(command, options, { shell: true })
-    console.log(result)
-    if (result.status !== 0 || result.stderr) {
+    if (result.status !== 0 || result.stderr.byteLength > 0) {
         throw new Error(`Command: '${command} ${options.join(" ")}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
     }
-    return result.output.toString()
+    return result.stdout.toString().trim()
 }
 
 async function generateChangelogMarkdown(from: string, to: string) {
