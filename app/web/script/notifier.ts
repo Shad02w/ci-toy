@@ -5,6 +5,7 @@ import fs from "node:fs"
 import { WebClient, type Block, type KnownBlock } from "@slack/web-api"
 import path from "node:path"
 import { spawnSync } from "node:child_process"
+import { stderr } from "node:process"
 
 const options = yargs(hideBin(process.argv))
     .scriptName("ci-notifier")
@@ -125,7 +126,7 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 }
 
 async function getChangelog(): Promise<KnownBlock[]> {
-    const output = runCommand("npx", ["changelogen@latest", "--from", "e882510"])
+    const output = runCommand("npx", ["changelogen@latest", "--from", "e882510", "--to", "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"])
     console.debug(`changelog\n${output}`)
     return await markdownToBlocks(output)
 }
@@ -137,8 +138,8 @@ async function delay(ms: number) {
 function runCommand(command: string, options: string[]): string {
     const result = spawnSync(command, options, { shell: true })
     console.log("runCommand", result)
-    if (result.status !== 0) {
+    if (result.status !== 0 || result.stderr) {
         throw new Error(`Command: '${command} ${options}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
     }
-    return result.stdout.toString()
+    return result.output.toString()
 }
