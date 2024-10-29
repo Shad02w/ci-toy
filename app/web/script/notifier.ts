@@ -128,6 +128,8 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 async function getChangelog(): Promise<KnownBlock[]> {
     const from = "e8825109a7d393c81df5f44cf74c5f4990483e9b"
     const to = "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"
+    // runCommand("git", ["show", from])
+    // runCommand("git", ["show", to])
     console.log(runCommand("git", ["rev-list", "--count", "HEAD"]))
 
     const changelog = await generateChangelogMarkdown(from, to)
@@ -141,6 +143,7 @@ async function delay(ms: number) {
 
 function runCommand(command: string, options: string[]): string {
     const result = spawnSync(command, options, { shell: true })
+    console.log(result)
     if (result.status !== 0 || result.stderr) {
         throw new Error(`Command: '${command} ${options.join(" ")}' failed with status\n ${result.status}\n${result.stderr.toString()}`)
     }
