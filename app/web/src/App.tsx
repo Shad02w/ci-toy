@@ -3,7 +3,7 @@ import "./App.css"
 
 const App = () => {
     return (
-        <div class="content blue">
+        <div class="content yellow">
             <h1>Rsbuild with Solid</h1>
             <p>Start building amazing things with Rsbuild.</p>
             <p>server running in port: {config.port} </p>
