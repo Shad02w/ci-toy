@@ -5,6 +5,10 @@ on:
   push:
     tags:
       - 'v*'
+  delete:
+    tags:
+      - 'v*'
+    
 
 jobs:
   test-ci:
