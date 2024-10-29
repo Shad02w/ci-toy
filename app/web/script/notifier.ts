@@ -97,6 +97,7 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
             break
         }
         MAX_RETRIES--
+        await delay(1000)
     }
 
     if (!threadId) {
