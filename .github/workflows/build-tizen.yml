@@ -5,6 +5,20 @@ on:
     branches:
       - tizen-build
 jobs:
+  log-git-show:
+    name: Log git show
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log git show
+        run: |
+          # get the oldest commit
+          git status
+          git show e8825109a7d393c81df5f44cf74c5f4990483e9b
+          git show 7f390fa6ccd403b42eb7ab67288c3c700f558cc3
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
@@ -105,10 +119,7 @@ jobs:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
 
-      - name: GIt show
-        run: |
-          git show e8825109a7d393c81df5f44cf74c5f4990483e9b
-          git show 7f390fa6ccd403b42eb7ab67288c3c700f558cc3
+
 
       - name: Notify
         run: |
