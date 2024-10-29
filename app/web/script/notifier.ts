@@ -128,8 +128,9 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 async function getChangelog(): Promise<KnownBlock[]> {
     const from = "e8825109a7d393c81df5f44cf74c5f4990483e9b"
     const to = "7f390fa6ccd403b42eb7ab67288c3c700f558cc3"
-    runCommand("git", ["show", from])
-    runCommand("git", ["show", to])
+    // runCommand("git", ["show", from])
+    // runCommand("git", ["show", to])
+    console.log(runCommand("git", ["config", "--get", "remote.origin.fetchDepth"]))
 
     const changelog = await generateChangelogMarkdown(from, to)
     console.log(`changelog\n${changelog}`)

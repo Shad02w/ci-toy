@@ -105,8 +105,6 @@ jobs:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
 
-
-
       - name: Notify
         run: |
           build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
