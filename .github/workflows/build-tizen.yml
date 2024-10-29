@@ -105,8 +105,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Log git status
+        run: git status
 
       - name: get fetched commits count
         run: git rev-list --count HEAD
@@ -123,11 +124,9 @@ jobs:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
 
-
       - name: Notify
         run: |
           build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
-          ls -la $build_dir
           npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
