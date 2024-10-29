@@ -33,59 +33,60 @@ jobs:
           path: docs.zip
           if-no-files-found: error
 
-  build-tizen:
-    name: Build Tizen App
-    runs-on: ubuntu-latest
-    env:
-      WORKSPACE_PATH: app/web
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup node and pnpm
-        uses: ./.github/actions/setup-node-and-pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build the application
-        run: npx nx build web --verbose
-
-      - name: Prepare Tizen CLI
-        uses: ./.github/actions/perpare-tizen-cli
-
-      - name: Tizen Build the application
-        working-directory: app/web
-        run: tizen build-web -- ./dist
-
-      - name: Tizen package the application
-        working-directory: ${{ env.WORKSPACE_PATH }}
-        run: |
-          tizen package -t wgt -o out -- ./dist/.buildResult
-
-      - name: Get Web version and build hash
-        id: versioning
-        uses: ./.github/actions/get-ctv-version-and-hash
-
-      - name: Calculate package filename
-        id: package-filename
-        run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
-
-      - name: Rename wgt file
-        run: |
-          mv $(ls ${{ env.WORKSPACE_PATH }}/out/*.wgt) ${{ env.WORKSPACE_PATH }}/out/${{ steps.package-filename.outputs.filename }}.wgt
-
-      - name: Upload the wgt file
-        uses: actions/upload-artifact@v4
-        with:
-          name: tizen
-          path: ${{ env.WORKSPACE_PATH }}/out/*
-          if-no-files-found: error
+  # build-tizen:
+  #   name: Build Tizen App
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     WORKSPACE_PATH: app/web
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup node and pnpm
+  #       uses: ./.github/actions/setup-node-and-pnpm
+  #
+  #     - name: Install dependencies
+  #       run: pnpm install
+  #
+  #     - name: Build the application
+  #       run: npx nx build web --verbose
+  #
+  #     - name: Prepare Tizen CLI
+  #       uses: ./.github/actions/perpare-tizen-cli
+  #
+  #     - name: Tizen Build the application
+  #       working-directory: app/web
+  #       run: tizen build-web -- ./dist
+  #
+  #     - name: Tizen package the application
+  #       working-directory: ${{ env.WORKSPACE_PATH }}
+  #       run: |
+  #         tizen package -t wgt -o out -- ./dist/.buildResult
+  #
+  #     - name: Get Web version and build hash
+  #       id: versioning
+  #       uses: ./.github/actions/get-ctv-version-and-hash
+  #
+  #     - name: Calculate package filename
+  #       id: package-filename
+  #       run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
+  #
+  #     - name: Rename wgt file
+  #       run: |
+  #         mv $(ls ${{ env.WORKSPACE_PATH }}/out/*.wgt) ${{ env.WORKSPACE_PATH }}/out/${{ steps.package-filename.outputs.filename }}.wgt
+  #
+  #     - name: Upload the wgt file
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: tizen
+  #         path: ${{ env.WORKSPACE_PATH }}/out/*
+  #         if-no-files-found: error
 
   release:
     name: Send a release message to Slack
     runs-on: ubuntu-latest
-    needs: [build-docs, build-tizen]
+    # needs: [build-docs, build-tizen]
+    needs: [build-docs]
     env: 
       ACTIFACTS_OUTPUT_DIRECTORY_NAME: build-assets
 
