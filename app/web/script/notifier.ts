@@ -98,7 +98,8 @@ async function uploadFiles({ files, channelId, client }: { files: string[]; chan
     let threadId: string | undefined = undefined
     let MAX_RETRIES = 20
 
-    // Do a polling to wait utils the 'shares' property is populated in the file object
+    // Do a polling to wait utils the thread id in 'shares' property is populated in the first file object
+    // ref: https://github.com/slackapi/python-slack-sdk/issues/1329#issuecomment-1430589611
     while (MAX_RETRIES) {
         const { file } = await client.files.info({
             file: firstFileId
