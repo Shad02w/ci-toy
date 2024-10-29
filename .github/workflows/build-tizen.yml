@@ -24,7 +24,8 @@ jobs:
       - name: Log details of one commit
         run: git show e8825109a7d393c81df5f44cf74c5f4990483e9b
 
-      - name:
+      - name: Log details of another commits
+        run: git --no-pager log "e8825109a7d393c81df5f44cf74c5f4990483e9b...7f390fa6ccd403b42eb7ab67288c3c700f558cc3" --pretty="----%n%s|%h|%an|%ae%n%b" --name-status
 
   build-docs:
     name: Build Docs
