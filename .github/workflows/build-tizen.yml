@@ -24,6 +24,8 @@ jobs:
       - name: Log details of one commit
         run: git show e8825109a7d393c81df5f44cf74c5f4990483e9b
 
+      - name:
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
@@ -111,6 +113,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Log git status
         run: git status
