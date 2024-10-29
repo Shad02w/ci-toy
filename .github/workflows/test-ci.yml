@@ -22,3 +22,6 @@ jobs:
 
       - name: Get commit message of HEAD
         run: git log --format=%B -n 1 HEAD
+
+      - name: list files
+        run: ls -la
