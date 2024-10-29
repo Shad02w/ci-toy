@@ -124,3 +124,7 @@ async function getChangelog(): Promise<KnownBlock[]> {
     const result = execSync("npx changelogen@latest --from e882510")
     return await markdownToBlocks(result.toString())
 }
+
+async function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
