@@ -119,6 +119,6 @@ async function getAllBuildArtifacts(directory: string): Promise<string[]> {
 }
 
 async function getChangelog(): Promise<KnownBlock[]> {
-    const result = execSync("npx changelogen@latest")
+    const result = execSync("npx changelogen@latest --from 8086a558")
     return await markdownToBlocks(result.toString())
 }
