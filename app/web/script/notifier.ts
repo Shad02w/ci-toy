@@ -73,7 +73,7 @@ async function postMessage({
     return await client.chat.update({
         channel: channelId,
         ts: threadId,
-        blocks: addTitle(header, blocks)
+        blocks: addHeader(header, blocks)
     })
 }
 
@@ -150,13 +150,13 @@ async function generateChangelogMarkdown(from: string, to?: string) {
     return await generateMarkDown(commits, config)
 }
 
-function addTitle(title: string, blocks: (Block | KnownBlock)[]) {
+function addHeader(header: string, blocks: (Block | KnownBlock)[]) {
     return [
         {
             type: "header",
             text: {
                 type: "plain_text",
-                text: title,
+                text: header,
                 emoji: true
             }
         },

@@ -116,10 +116,11 @@ jobs:
 
       - name: Notify
         run: |
+          HEADER="Dev Release - ${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}"
           build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --directory $build_dir \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
-            --header "Dev Release - ${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" \
+            --header "$HEADER" \
             --tag "v*"
