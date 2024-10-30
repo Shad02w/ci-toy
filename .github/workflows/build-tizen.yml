@@ -122,5 +122,5 @@ jobs:
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --directory $build_dir \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
-            --header "$HEADER" \
+            --header "\"$HEADER\"" \
             --tag "v*"
