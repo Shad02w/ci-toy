@@ -30,6 +30,11 @@ const options = yargs(hideBin(process.argv))
         type: "string",
         demandOption: true
     })
+    .option("header", {
+        desc: "The title of the release",
+        type: "string",
+        demandOption: true
+    })
     .help("Send a notification to Slack with changelog and build artifacts")
 
 async function run() {
@@ -40,38 +45,42 @@ async function run() {
     const [files, blocks] = await Promise.all([getFiles(argv.directory), getChangelog(argv.tag)])
 
     await postMessage({
-        files,
-        channelId: argv.channel,
         client,
-        blocks
+        header: argv.header,
+        files,
+        blocks,
+        channelId: argv.channel
     })
 }
+
 run()
 
 async function postMessage({
     client,
     files,
     channelId,
-    blocks
+    blocks,
+    header
 }: {
     client: WebClient
     files: string[]
     channelId: string
     blocks: (Block | KnownBlock)[]
+    header: string
 }) {
-    const { threadId } = await uploadFiles({ files, channelId, client })
+    const { threadId } = await uploadFiles({ files, channelId, client, title: header })
 
     return await client.chat.update({
         channel: channelId,
         ts: threadId,
-        blocks
+        blocks: addTitle(header, blocks)
     })
 }
 
-async function uploadFiles({ files, channelId, client }: { files: string[]; channelId: string; client: WebClient }) {
+async function uploadFiles({ files, channelId, client, title }: { title: string; files: string[]; channelId: string; client: WebClient }) {
     const { files: uploadedFiles } = await client.filesUploadV2({
         channel_id: channelId,
-        initial_comment: "Release notes",
+        initial_comment: title,
         file_uploads: files.map(file => ({
             filename: path.basename(file),
             file: fs.createReadStream(file)
@@ -141,16 +150,31 @@ async function generateChangelogMarkdown(from: string, to?: string) {
     return await generateMarkDown(commits, config)
 }
 
+function addTitle(title: string, blocks: (Block | KnownBlock)[]) {
+    return [
+        {
+            type: "header",
+            text: {
+                type: "plain_text",
+                text: title,
+                emoji: true
+            }
+        },
+        {
+            type: "divider"
+        },
+        ...blocks
+    ]
+}
+
 function getLastGitTag(pattern?: string): string | null {
     let tag: string | null = null
-    // try to get the last tag by pattern
     try {
         tag = getGitTag(pattern)
     } catch (e) {
         // no-np
     }
 
-    // fallback to get the latest tag
     if (!tag) {
         try {
             console.log(`No tag found by pattern: ${pattern}, fallback to get the latest tag`)
@@ -163,14 +187,34 @@ function getLastGitTag(pattern?: string): string | null {
     return tag
 }
 
+/**
+ * Get the last tag of the current branch by pattern
+ * @param pattern - the pattern of the tag
+ * @returns the latest tag
+ *
+ * @throws
+ * Thrown when the tag is not found
+ */
 function getGitTag(pattern?: string) {
     return runCommand("git", ["--no-pager", "describe", pattern ? `--match="${pattern}"` : undefined, "--abbrev=0", "--tags"])
 }
 
+/**
+ * Get the commit hash of the a tag
+ * @param tag - the tag
+ * @returns the commit hash
+ *
+ * @throws
+ * Thrown when the tag is not found
+ */
 function getGitCommitHash(tag: string) {
     return runCommand("git", ["rev-parse", tag])
 }
 
+/**
+ * Get the commit hash of the first commit of the current branch
+ * @returns the commit hash
+ */
 function getGitFirstCommitHash() {
     return runCommand("git", ["rev-list", "--max-parents=0", "HEAD"])
 }
@@ -182,6 +226,7 @@ function getGitFirstCommitHash() {
 async function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
+
 function runCommand(command: string, options: (string | null | undefined)[]): string {
     const result = spawnSync(
         command,

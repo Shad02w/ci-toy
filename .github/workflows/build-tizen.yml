@@ -3,10 +3,8 @@ name: Docs and tizen build
 on:
   workflow_dispatch:
   push:
-    # branches:
-    #   - tizen-build
-    tags:
-      - 'v*'
+    branches:
+      - tizen-build
 
 jobs:
   build-docs:
@@ -103,6 +101,10 @@ jobs:
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
 
+      - name: Get the version
+        id: versioning
+        uses: ./.github/actions/get-ctv-version-and-hash
+
       - name: Install dependencies
         run: pnpm install
 
@@ -118,5 +120,6 @@ jobs:
           npx nx run web:ci-notify \
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
+            --title "Dev Release - ${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" \
             --directory $build_dir \
             --tag "v*"
