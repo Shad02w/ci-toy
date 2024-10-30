@@ -114,7 +114,7 @@ jobs:
           path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
           merge-multiple: true
 
-      - name: Notify
+      - name: Send changelog and packages to Slack
         run: |
           HEADER="Dev Release - ${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}"
           build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
