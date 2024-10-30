@@ -9,14 +9,7 @@ on:
       - 'v*'
 
 jobs:
-
-  check-branch:
-    name: Check branch
-    if: ${{ github.ref == 'refs/heads/tizen-build' }}
-    runs-on: ubuntu-latest
-
   build-docs:
-    needs: check-branch
     name: Build Docs
     runs-on: ubuntu-latest
     env:
@@ -45,7 +38,6 @@ jobs:
           if-no-files-found: error
 
   build-tizen:
-    needs: check-branch
     name: Build Tizen App
     runs-on: ubuntu-latest
     env:
