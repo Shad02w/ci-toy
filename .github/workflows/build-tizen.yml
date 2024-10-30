@@ -3,8 +3,10 @@ name: Docs and tizen build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - tizen-build
+    # branches:
+    #   - tizen-build
+    tags:
+      - 'v*'
 
 jobs:
   build-docs:
@@ -117,4 +119,4 @@ jobs:
             --token ${{ secrets.SLACK_BOT_TOKEN }} \
             --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
             --directory $build_dir \
-            --tag "ctv-v*"
+            --tag "v*"
