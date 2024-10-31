@@ -2,9 +2,9 @@ name: Docs and tizen build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - tizen-build
+  # push:
+  #   branches:
+  #     - tizen-build
 
 jobs:
   build-docs:

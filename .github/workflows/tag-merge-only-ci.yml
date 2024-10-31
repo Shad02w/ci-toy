@@ -1,0 +1,27 @@
+name: Tag Merge Only CI
+
+on:
+  push:
+    branches:
+      - tizen-build
+    tags:
+      - 'web-v*'
+
+jobs:
+  deploy:
+    name: Developer Release
+    if: github.event.pull_request.merged == true && startsWith(github.ref, 'refs/tags/web-v')
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log current commit
+        run: |
+          echo ${{ github.ref }}
+          git log --oneline
+          git describe --tags --abbrev=0
+
+      - name: list files
+        run: ls -la
