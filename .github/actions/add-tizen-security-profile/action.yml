@@ -1,0 +1,52 @@
+name: Add Tizen Security Profile
+description: Add Tizen Security Profile
+
+inputs:
+  author-cert:
+    description: Author certificate (.crt file) base64 encoded
+    required: true
+  author-key:
+    description: Key for author certificatea (.p12 file) base64 encoded
+    required: true
+  author-password:
+    description: Password for author certificate (.pwd file) base64 encoded
+    required: true
+  author-ca:
+    description: CA for author certificate (.crt file) base64 encoded
+    required: true
+  distributor-key:
+    description: Key for distributor certificate (.p12 file) base64 encoded
+    required: true
+  distributor-password:
+    description: Password for distributor certificate (.pwd file) base64 encoded
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: get
+      shell: bash
+      run:
+        GLOBAL_PROFILES_PATH="$(tizen cli-config -l | grep "default.profiles.path" | cut -d'=' -f2)"
+        echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
+
+    - name: Update tizen profiles.xml
+      shell: bash
+      run: |
+        cat > ${{ env.TIZEN_PROFILES_PATH }} <<EOF
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <profiles active="default" version="3.1">
+        <profile name="default">
+        <profileitem ca="" distributor="0" key="/Users/alvistse/tizen-studio-data/keystore/author/mycert.p12" password="/Users/alvistse/tizen-studio-data/keystore/author/mycert.pwd" rootca=""/>
+        <profileitem ca="/Users/alvistse/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-ca.cer" distributor="1" key="/Users/alvistse/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12" password="/Users/alvistse/tizen-studio-data/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.pwd" rootca=""/>
+        <profileitem ca="" distributor="2" key="" password="" rootca=""/>
+        </profile>
+        </profiles>
+        EOF
+
+
+    - name: Add Tizen Security Profile to .env
+      shell: bash
+      run: tizen security-profiles list
+
