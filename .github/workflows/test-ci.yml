@@ -30,6 +30,9 @@ jobs:
         id: get-dist-folder-path
         run: echo "dist-folder-path=$(pwd)/app/web/dist" >> $GITHUB_OUTPUT
 
+      - name: List dist folder
+        run: ls -la ${{ steps.get-dist-folder-path.outputs.dist-folder-path }}
+
       - name: Build Tizen app
         id: tizen-build-action
         uses: sourcetoad/tizen-build-action@v1.1.1
