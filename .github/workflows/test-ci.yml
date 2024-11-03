@@ -33,6 +33,9 @@ jobs:
       - name: List dist folder
         run: ls -la ${{ steps.get-dist-folder-path.outputs.dist-folder-path }}
 
+      - name: install keyring
+        run: sudo apt-get install -y gnome-keyring
+
       - name: Build Tizen app
         id: tizen-build-action
         uses: sourcetoad/tizen-build-action@v1.1.1
