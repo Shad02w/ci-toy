@@ -1,13 +1,10 @@
-name: App Build
+name: Generated builds for PR
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
-  #   branches:
-  #     - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
 
 jobs:
   build:
@@ -28,4 +25,4 @@ jobs:
         run: pnpm install
 
       - name: Build the application
-        run: pnpm build
+        run: pnpm dlx nx run docs:build 
