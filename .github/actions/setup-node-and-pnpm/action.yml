@@ -9,6 +9,11 @@ runs:
       with:
         node-version-file: ".nvmrc"
 
+
+    - name: Update corepack
+      shell: bash
+      run: npm install -g corepack
+
     - name: Enable Corepack
       shell: bash
       run: corepack enable
