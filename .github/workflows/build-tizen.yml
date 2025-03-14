@@ -56,6 +56,10 @@ jobs:
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
 
+      - name: Tizen Build the application
+        working-directory: app/web
+        run: tizen build-web -- ./dist
+
       - name: Add tizen security profile
         uses: ./.github/actions/add-tizen-security-profile
         with:
@@ -65,10 +69,6 @@ jobs:
           distributor-ca: ${{ secrets.TIZEN_DISTRIBUTOR_CA }}
           distributor-key: ${{ secrets.TIZEN_DISTRIBUTOR_KEY }}
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
-
-      - name: Tizen Build the application
-        working-directory: app/web
-        run: tizen build-web -- ./dist
 
       - name: Tizen package the application
         working-directory: ${{ env.WORKSPACE_PATH }}

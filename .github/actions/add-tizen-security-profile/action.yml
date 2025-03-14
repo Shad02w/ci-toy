@@ -66,7 +66,8 @@ runs:
       run: |
         cat > ~/package.sh <<EOF
         echo "" | gnome-keyring-daemon --unlock
-        tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -c ${{ env.AUTHOR_CA_PATH }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }} -dc ${{ env.DISTRIBUTOR_CA_PATH }}
+        tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
+        tizen package -s game -t wgt -o out -- ./dist/.buildResult
         EOF
 
     - name: Run package.sh
@@ -74,11 +75,3 @@ runs:
       run: |
         chmod +x ~/package.sh
         dbus-run-session -- ~/package.sh
-
-    - name: Cat profiles.xml
-      shell: bash
-      run: cat ${{ env.TIZEN_PROFILES_PATH }}
-
-    - name: List Tizen Security Profiles
-      shell: bash
-      run: tizen security-profiles list
