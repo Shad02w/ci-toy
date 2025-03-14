@@ -72,6 +72,10 @@ jobs:
         working-directory: ${{ env.WORKSPACE_PATH }}
         run: |
           tizen package -t wgt -o out -- ./dist/.buildResult
+        continue-on-error: true
+
+      - name: log cli.log
+        run: cat $HOME/tizen-studio-data/cli/logs/cli.log
 
       - name: Get Web version and build hash
         id: versioning
