@@ -26,7 +26,7 @@ runs:
   steps:
     - name: Install gnome-keyring
       shell: bash
-      run: apt install -y gnome-keyring
+      run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y gnome-keyring
 
     - name: Create certificates directory
       shell: bash

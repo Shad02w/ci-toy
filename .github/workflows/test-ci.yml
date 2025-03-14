@@ -2,9 +2,9 @@ name : Tizen Build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - tizen-build
+  # push:
+  #   branches:
+  #     - tizen-build
 
 jobs:
   build:
