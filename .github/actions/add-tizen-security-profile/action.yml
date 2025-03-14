@@ -39,7 +39,7 @@ runs:
         # Set file paths as environment variables
         echo "AUTHOR_KEY_PATH=${{ github.action_path }}/certs/author.p12" >> $GITHUB_ENV
         echo "DISTRIBUTOR_KEY_PATH=${{ github.action_path }}/certs/distributor.p12" >> $GITHUB_ENV
-        eho "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
+        echo "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
         echo "DISTRIBUTOR_CA_PATH=${{ github.action_path }}/certs/distributor-ca.crt" >> $GITHUB_ENV
 
         # Save passwords as environment variables directly
