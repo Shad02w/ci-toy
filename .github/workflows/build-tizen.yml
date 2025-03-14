@@ -2,9 +2,9 @@ name: Docs and tizen build
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - tizen-build
+  push:
+    branches:
+      - tizen-build
 
 jobs:
   build-docs:
@@ -83,44 +83,3 @@ jobs:
           name: tizen
           path: ${{ env.WORKSPACE_PATH }}/out/*
           if-no-files-found: error
-
-  release:
-    name: Send a release message to Slack
-    runs-on: ubuntu-latest
-    needs: [build-docs, build-tizen]
-    env: 
-      ACTIFACTS_OUTPUT_DIRECTORY_NAME: build-assets
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      - name: Setup node and pnpm
-        uses: ./.github/actions/setup-node-and-pnpm
-
-      - name: Get the version
-        id: versioning
-        uses: ./.github/actions/get-ctv-version-and-hash
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Download the artifact
-        uses: actions/download-artifact@v4
-        with:
-          path: ./${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
-          merge-multiple: true
-
-      - name: Send changelog and packages to Slack
-        run: |
-          HEADER="Dev Release - ${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}"
-          build_dir=$(pwd)/${{ env.ACTIFACTS_OUTPUT_DIRECTORY_NAME }}
-          npx nx run web:ci-notify \
-            --token ${{ secrets.SLACK_BOT_TOKEN }} \
-            --directory $build_dir \
-            --channel ${{ vars.SLACK_RELEASE_CHANNEL_ID }} \
-            --header "\"$HEADER\"" \
-            --tag "v*"
