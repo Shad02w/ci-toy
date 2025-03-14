@@ -68,8 +68,8 @@ runs:
         echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
         tizen security-profiles list
-        ls ./dist
-        tizen package -t wgt -o out -- ./dist/.buildResult
+        ls $GITHUB_WORKSPACE/app/web/dist
+        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
         EOF
 
     - name: Run package.sh
