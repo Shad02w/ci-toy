@@ -39,8 +39,6 @@ runs:
         # Set file paths as environment variables
         echo "AUTHOR_KEY_PATH=${{ github.action_path }}/certs/author.p12" >> $GITHUB_ENV
         echo "DISTRIBUTOR_KEY_PATH=${{ github.action_path }}/certs/distributor.p12" >> $GITHUB_ENV
-        echo "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
-        echo "DISTRIBUTOR_CA_PATH=${{ github.action_path }}/certs/distributor-ca.crt" >> $GITHUB_ENV
 
         # Save passwords as environment variables directly
         echo "AUTHOR_PASSWORD=${{ inputs.author-password }}" >> $GITHUB_ENV
@@ -50,7 +48,6 @@ runs:
       shell: bash
       run: |
         echo "${{ inputs.author-key }}" | base64 -d > ${{ env.AUTHOR_KEY_PATH }}
-        echo "${{ inputs.author-ca }}" | base64 -d > ${{ env.AUTHOR_CA_PATH }}
         echo "${{ inputs.distributor-key }}" | base64 -d > ${{ env.DISTRIBUTOR_KEY_PATH }}
 
     - name: Get Tizen profiles path
@@ -64,7 +61,7 @@ runs:
       run: |
         cat > ~/package.sh <<EOF
         echo "" | gnome-keyring-daemon --unlock
-        tizen security-profiles add -n game -a "${{ env.AUTHOR_CA_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d "${{ env.DISTRIBUTOR_KEY_PATH }}" -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
+        tizen security-profiles add -n game -a "${{ env.AUTHOR_KEY_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d "${{ env.DISTRIBUTOR_KEY_PATH }}" -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
         EOF
 
     - name: Run package.sh
