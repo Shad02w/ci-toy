@@ -63,7 +63,7 @@ runs:
       shell: bash
       run: |
         cat > ~/package.sh <<EOF
-        echo "" | gnome-keyring --unlock
+        echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a "${{ env.AUTHOR_CA_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d "${{ env.DISTRIBUTOR_KEY_PATH }}" -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
         EOF
 
