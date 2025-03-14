@@ -26,7 +26,7 @@ runs:
   steps:
     - name: Install gnome-keyring
       shell: bash
-      run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y gnome-keyring
+      run: sudo apt-get install -y gnome-keyring
 
     - name: Create certificates directory
       shell: bash
@@ -38,8 +38,9 @@ runs:
       run: |
         # Set file paths as environment variables
         echo "AUTHOR_KEY_PATH=${{ github.action_path }}/certs/author.p12" >> $GITHUB_ENV
-        echo "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
         echo "DISTRIBUTOR_KEY_PATH=${{ github.action_path }}/certs/distributor.p12" >> $GITHUB_ENV
+        echo "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
+        echo "DISTRIBUTOR_CA_PATH=${{ github.action_path }}/certs/distributor-ca.crt" >> $GITHUB_ENV
 
         # Save passwords as environment variables directly
         echo "AUTHOR_PASSWORD=${{ inputs.author-password }}" >> $GITHUB_ENV
@@ -63,7 +64,7 @@ runs:
       run: |
         cat > ~/package.sh <<EOF
         echo "" | gnome-keyring --unlock
-        tizen security-profiles add -n game -a "${{ env.AUTHOR_CA_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
+        tizen security-profiles add -n game -a "${{ env.AUTHOR_CA_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d "${{ env.DISTRIBUTOR_KEY_PATH }}" -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
         EOF
         chmod +x ~/package.sh
 
