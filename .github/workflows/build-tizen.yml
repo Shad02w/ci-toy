@@ -56,6 +56,20 @@ jobs:
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
 
+      - name: Add tizen security profile
+        uses: ./.github/actions/add-tizen-security-profile
+        with:
+          # author-cert: ${{ secrets.TIZEN_AUTHOR_CERT }}
+          # author-key: ${{ secrets.TIZEN_AUTHOR_KEY }}
+          # author-password: ${{ secrets.TIZEN_AUTHOR_PASSWORD }}
+          # author-ca: ${{ secrets.TIZEN_AUTHOR_CA }}
+          # distributor-key: ${{ secrets.TIZEN_DISTRIBUTOR_KEY }}
+          # distributor-password: ${{ secrets.TIZEN_DISTRIBUTOR_PASSWORD }}
+          author-key: 12312312312312
+          author-password: aaaccc111222
+          distributor-key: 12312312312323
+          distributor-password: aaaccc111222
+
       - name: Tizen Build the application
         working-directory: app/web
         run: tizen build-web -- ./dist
