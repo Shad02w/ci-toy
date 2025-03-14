@@ -66,11 +66,12 @@ runs:
         echo "" | gnome-keyring --unlock
         tizen security-profiles add -n game -a "${{ env.AUTHOR_CA_PATH }}" -p "${{ env.AUTHOR_PASSWORD }}" -d "${{ env.DISTRIBUTOR_KEY_PATH }}" -dp "${{ env.DISTRIBUTOR_PASSWORD }}"
         EOF
-        chmod +x ~/package.sh
 
-    - name: Cat package.sh
+    - name: Run package.sh
       shell: bash
-      run: cat ~/package.sh
+      run: |
+        chmod +x ~/package.sh
+        dbus-run-session -- ~/package.sh
 
     - name: Cat profiles.xml
       shell: bash
