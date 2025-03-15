@@ -66,25 +66,25 @@ jobs:
       - name: Build with rsbuild (includes Tizen build and package)
         run: npx nx build web
       #
-      # - name: Log tizen cli logs
-      #   if: always()
-      #   run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
+      - name: Log tizen cli logs
+        if: always()
+        run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
 
-      # - name: Get Web version and build hash
-      #   id: versioning
-      #   uses: ./.github/actions/get-ctv-version-and-hash
+      - name: Get Web version and build hash
+        id: versioning
+        uses: ./.github/actions/get-ctv-version-and-hash
 
-      # - name: Calculate package filename
-      #   id: package-filename
-      #   run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
+      - name: Calculate package filename
+        id: package-filename
+        run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
 
-      # - name: Rename wgt file
-      #   run: |
-      #     mv $(ls ${{ env.WORKSPACE_PATH }}/out/*.wgt) ${{ env.WORKSPACE_PATH }}/out/${{ steps.package-filename.outputs.filename }}.wgt
+      - name: Rename wgt file
+        run: |
+          mv $(ls ${{ env.WORKSPACE_PATH }}/out/*.wgt) ${{ env.WORKSPACE_PATH }}/out/${{ steps.package-filename.outputs.filename }}.wgt
 
-      # - name: Upload the wgt file
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: tizen
-      #     path: ${{ env.WORKSPACE_PATH }}/out/*
-      #     if-no-files-found: error
+      - name: Upload the wgt file
+        uses: actions/upload-artifact@v4
+        with:
+          name: tizen
+          path: ${{ env.WORKSPACE_PATH }}/out/*
+          if-no-files-found: error
