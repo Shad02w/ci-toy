@@ -50,14 +50,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build the application
-        run: npx nx build web --verbose
-
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
 
       - name: Add tizen security profile
-        id: tizen-security
         uses: ./.github/actions/add-tizen-security-profile
         with:
           author-ca: ${{ secrets.TIZEN_AUTHOR_CA }}
@@ -68,14 +64,11 @@ jobs:
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
 
       - name: Build with rsbuild (includes Tizen build and package)
-        working-directory: ${{ env.WORKSPACE_PATH }}
-        # env:
-        #   DBUS_SESSION_BUS_ADDRESS: ${{ steps.tizen-security.outputs.dbus-session-address }}
-        run: npx rsbuild build
-
-      - name: Log tizen cli logs
-        if: always()
-        run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
+        run: npx nx build web
+      #
+      # - name: Log tizen cli logs
+      #   if: always()
+      #   run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
 
       # - name: Get Web version and build hash
       #   id: versioning
