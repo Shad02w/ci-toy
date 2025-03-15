@@ -67,16 +67,11 @@ jobs:
           distributor-key: ${{ secrets.TIZEN_DISTRIBUTOR_KEY }}
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
 
-      - name: Tizen Build the application
-        working-directory: app/web
-        run: tizen build-web -- ./dist
-
-      - name: Tizen package the application
+      - name: Build with rsbuild (includes Tizen build and package)
         working-directory: ${{ env.WORKSPACE_PATH }}
-        run: |
-          # Use the same DBUS session from the security profile step
-          export DBUS_SESSION_BUS_ADDRESS=${{ steps.tizen-security.outputs.dbus-session-address }}
-          tizen package -t wgt -o out -- ./dist/.buildResult
+        env:
+          DBUS_SESSION_BUS_ADDRESS: ${{ steps.tizen-security.outputs.dbus-session-address }}
+        run: npx rsbuild build --verbose
 
       - name: log cli.log
         if: always()
