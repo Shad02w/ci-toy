@@ -60,12 +60,6 @@ runs:
         echo "${{ inputs.distributor-ca }}" | base64 -d > ${{ env.DISTRIBUTOR_CA_PATH }}
         echo "${{ inputs.distributor-key }}" | base64 -d > ${{ env.DISTRIBUTOR_KEY_PATH }}
 
-    - name: Get Tizen profiles path
-      shell: bash
-      run: |
-        GLOBAL_PROFILES_PATH="$(tizen cli-config -l | grep "default.profiles.path" | cut -d'=' -f2)"
-        echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
-
     - name: Start persistent DBUS session
       id: dbus-session
       shell: bash
@@ -82,4 +76,3 @@ runs:
         echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
         tizen security-profiles list
-

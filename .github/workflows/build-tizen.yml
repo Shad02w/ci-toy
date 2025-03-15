@@ -56,10 +56,6 @@ jobs:
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
 
-      - name: Tizen Build the application
-        working-directory: app/web
-        run: tizen build-web -- ./dist
-
       - name: Add tizen security profile
         id: tizen-security
         uses: ./.github/actions/add-tizen-security-profile
@@ -71,6 +67,10 @@ jobs:
           distributor-key: ${{ secrets.TIZEN_DISTRIBUTOR_KEY }}
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
 
+      - name: Tizen Build the application
+        working-directory: app/web
+        run: tizen build-web -- ./dist
+
       - name: Tizen package the application
         working-directory: ${{ env.WORKSPACE_PATH }}
         run: |
@@ -78,8 +78,9 @@ jobs:
           export DBUS_SESSION_BUS_ADDRESS=${{ steps.tizen-security.outputs.dbus-session-address }}
           tizen package -t wgt -o out -- ./dist/.buildResult
 
-      # - name: log cli.log
-      #   run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
+      - name: log cli.log
+        if: always()
+        run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
 
       # - name: Get Web version and build hash
       #   id: versioning
