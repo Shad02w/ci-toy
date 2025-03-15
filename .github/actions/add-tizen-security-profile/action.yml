@@ -61,27 +61,26 @@ runs:
         GLOBAL_PROFILES_PATH="$(tizen cli-config -l | grep "default.profiles.path" | cut -d'=' -f2)"
         echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
 
-    - name: Add Tizen Security Profile
+    - name: Start persistent DBUS session
       shell: bash
       run: |
-        dbus-run-session -- bash
+        # Start a persistent DBUS session and save the address to a file
+        dbus-daemon --session --fork --print-address > $GITHUB_WORKSPACE/dbus-address.txt
+        echo "DBUS_SESSION_BUS_ADDRESS=\$(cat $GITHUB_WORKSPACE/dbus-address.txt)" >> $GITHUB_ENV
+
+    - name: Update tizen security profile
+      shell: bash
+      run: |
+        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
         echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
-        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
 
-    # - name: Update tizen profiles.xml
-    #   shell: bash
-    #   run: |
-    #     cat > ~/package.sh <<EOF
-    #     echo "" | gnome-keyring-daemon --unlock
-    #     tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
-    #     tizen security-profiles list
-    #     ls $GITHUB_WORKSPACE/app/web/dist
-    #     tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
-    #     EOF
-
-    - name: Run package.sh
+    - name: Package Tizen application
       shell: bash
       run: |
-        chmod +x ~/package.sh
-        dbus-run-session -- ~/package.sh
+        # This step will use the same DBUS session as the previous step
+        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
+        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
+
+    # You can add more steps here that use the same DBUS session
+    # Just make sure to include: export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
