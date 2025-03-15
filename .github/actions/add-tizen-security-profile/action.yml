@@ -67,13 +67,12 @@ runs:
         # Start a persistent DBUS session and save the address to the GitHub environment
         DBUS_ADDRESS=$(dbus-daemon --session --fork --print-address)
         echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS" >> $GITHUB_ENV
-        echo $DBDBUS_SESSION_BUS_ADDRESS
 
     - name: Setup GNOME keyring and Tizen security profile
       shell: bash
       run: |
         export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
-        echo "" | gnome-keyring-daemon --start --unlock
+        echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
         tizen security-profiles list
         tizen package -t wgt -o $GITHUB_WORKSPACE/app/web/out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
