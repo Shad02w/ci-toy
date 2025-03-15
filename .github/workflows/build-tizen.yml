@@ -76,7 +76,7 @@ jobs:
 
       - name: Calculate package filename
         id: package-filename
-        run: echo "filename=game-gotham-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
+        run: echo "filename=demo-tizen-app-${{ steps.versioning.outputs.version }}-${{ steps.versioning.outputs.hash }}" >> $GITHUB_OUTPUT
 
       - name: Rename wgt file
         run: |
