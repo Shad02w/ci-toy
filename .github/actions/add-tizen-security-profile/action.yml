@@ -1,6 +1,11 @@
 name: Add Tizen Security Profile
 description: Add Tizen Security Profile
 
+outputs:
+  dbus-session-address:
+    description: DBUS session address that can be used in subsequent steps
+    value: ${{ steps.dbus-session.outputs.dbus_address }}
+
 inputs:
   author-ca:
     description: CA for author certificate (.crt file) base64 encoded
@@ -62,11 +67,13 @@ runs:
         echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
 
     - name: Start persistent DBUS session
+      id: dbus-session
       shell: bash
       run: |
         # Start a persistent DBUS session and save the address to the GitHub environment
         DBUS_ADDRESS=$(dbus-daemon --session --fork --print-address)
         echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS" >> $GITHUB_ENV
+        echo "dbus_address=$DBUS_ADDRESS" >> $GITHUB_OUTPUT
 
     - name: Setup GNOME keyring and Tizen security profile
       shell: bash
@@ -76,8 +83,3 @@ runs:
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
         tizen security-profiles list
 
-    - name: Package the application
-      shell: bash
-      run: |
-        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
-        tizen package -t wgt -o $GITHUB_WORKSPACE/app/web/out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
