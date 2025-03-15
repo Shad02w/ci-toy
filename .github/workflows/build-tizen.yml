@@ -71,7 +71,7 @@ jobs:
         working-directory: ${{ env.WORKSPACE_PATH }}
         env:
           DBUS_SESSION_BUS_ADDRESS: ${{ steps.tizen-security.outputs.dbus-session-address }}
-        run: npx rsbuild build --verbose
+        run: npx rsbuild build
 
       - name: log cli.log
         if: always()
