@@ -61,18 +61,26 @@ runs:
         GLOBAL_PROFILES_PATH="$(tizen cli-config -l | grep "default.profiles.path" | cut -d'=' -f2)"
         echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
 
-    - name: Update tizen security profile
+    - name: Start persistent DBUS session
       shell: bash
       run: |
-        cat > ~/package.sh <<EOF
-        echo "" | gnome-keyring-daemon --unlock
-        tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
-        ls $GITHUB_WORKSPACE/app/web/dist/.buildResult
-        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
-        EOF
+        # Start a persistent DBUS session and save the address to the GitHub environment
+        DBUS_ADDRESS=$(dbus-daemon --session --fork --print-address)
+        echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS" >> $GITHUB_ENV
 
-    - name: Run package.sh
+    - name: Setup GNOME keyring and Tizen security profile
       shell: bash
       run: |
-        chmod +x ~/package.sh
-        dbus-run-session -- ~/package.sh
+        # Use the persistent DBUS session
+        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
+        # Start and unlock the keyring
+        echo "" | gnome-keyring-daemon --start --unlock
+        tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
+
+    - name: Package Tizen application
+      shell: bash
+      run: |
+        # Use the persistent DBUS session
+        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
+        # Package the application
+        tizen package -t wgt -o $GITHUB_WORKSPACE/app/web/out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
