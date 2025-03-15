@@ -76,10 +76,4 @@ runs:
         echo "" | gnome-keyring-daemon --start --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
         tizen security-profiles list
-
-    - name: Package Tizen application
-      shell: bash
-      run: |
-        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
-        echo "" | gnome-keyring-daemon --start --unlock
         tizen package -t wgt -o $GITHUB_WORKSPACE/app/web/out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
