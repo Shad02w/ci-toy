@@ -69,11 +69,11 @@ jobs:
 
       - name: Build with rsbuild (includes Tizen build and package)
         working-directory: ${{ env.WORKSPACE_PATH }}
-        env:
-          DBUS_SESSION_BUS_ADDRESS: ${{ steps.tizen-security.outputs.dbus-session-address }}
+        # env:
+        #   DBUS_SESSION_BUS_ADDRESS: ${{ steps.tizen-security.outputs.dbus-session-address }}
         run: npx rsbuild build
 
-      - name: log cli.log
+      - name: Log tizen cli logs
         if: always()
         run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
 
