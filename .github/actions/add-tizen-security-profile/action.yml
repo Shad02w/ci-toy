@@ -61,26 +61,17 @@ runs:
         GLOBAL_PROFILES_PATH="$(tizen cli-config -l | grep "default.profiles.path" | cut -d'=' -f2)"
         echo "TIZEN_PROFILES_PATH=$GLOBAL_PROFILES_PATH" >> $GITHUB_ENV
 
-    - name: Start persistent DBUS session
-      shell: bash
-      run: |
-        # Start a persistent DBUS session and save the address to a file
-        dbus-daemon --session --fork --print-address > $GITHUB_WORKSPACE/dbus-address.txt
-        echo "DBUS_SESSION_BUS_ADDRESS=\$(cat $GITHUB_WORKSPACE/dbus-address.txt)" >> $GITHUB_ENV
-
     - name: Update tizen security profile
       shell: bash
       run: |
-        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
+        cat > ~/package.sh <<EOF
         echo "" | gnome-keyring-daemon --unlock
         tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
+        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
+        EOF
 
-    - name: Package Tizen application
+    - name: Run package.sh
       shell: bash
       run: |
-        # This step will use the same DBUS session as the previous step
-        export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
-        tizen package -t wgt -o out -- $GITHUB_WORKSPACE/app/web/dist/.buildResult
-
-    # You can add more steps here that use the same DBUS session
-    # Just make sure to include: export DBUS_SESSION_BUS_ADDRESS=${{ env.DBUS_SESSION_BUS_ADDRESS }}
+        chmod +x ~/package.sh
+        dbus-run-session -- ~/package.sh
