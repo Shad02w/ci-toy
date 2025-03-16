@@ -65,7 +65,7 @@ jobs:
 
       - name: Build with rsbuild (includes Tizen build and package)
         run: npx nx build web
-      #
+
       - name: Log tizen cli logs
         if: always()
         run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
