@@ -25,7 +25,7 @@ export const pluginTizen = (): RsbuildPlugin => ({
             // Run tizen package command
             console.log("Running tizen package...")
 
-            const packageResult = spawnSync("tizen", ["package", "-t", "wgt", "-o", "out", "--", "./dist/.buildResult"], {
+            const packageResult = spawnSync("tizen", ["package", "-s", "game", "-t", "wgt", "-o", "out", "--", "./dist/.buildResult"], {
                 cwd: process.cwd(),
                 stdio: "inherit",
                 shell: true
