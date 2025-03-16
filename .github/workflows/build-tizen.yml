@@ -64,7 +64,9 @@ jobs:
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
 
       - name: Build with rsbuild (includes Tizen build and package)
-        run: npx nx build web
+        run: |
+          tizen security-profiles list
+          npx nx build web
 
       - name: Log tizen cli logs
         if: always()
