@@ -10,7 +10,7 @@
     "targetDefaults": {
         "build": {
             "dependsOn": ["^build", "test", "format", "lint"],
-            "outputs": ["{projectRoot}/dist", "{projectRoot}/build"],
+            "outputs": ["{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/out"],
             "cache": true
         },
         "format": {
