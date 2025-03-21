@@ -16,16 +16,15 @@ runs:
     - name: Prepare environment variables
       shell: bash
       run: |
-        echo "TIZEN_SDK_URL=https://download.tizen.org/sdk/Installer/tizen-studio_${{ inputs.version }}/web-cli_Tizen_Studio_${{ inputs.version }}_ubuntu-64.bin" >> $GITHUB_ENV \
-        && echo "TIZEN_SDK_FILENAME=tizen-studio-installer.bin" >> $GITHUB_ENV \
-        && echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
+        echo "TIZEN_SDK_URL=https://download.tizen.org/sdk/Installer/tizen-studio_${{ inputs.version }}/web-cli_Tizen_Studio_${{ inputs.version }}_ubuntu-64.bin" >> $GITHUB_ENV
+        echo "TIZEN_SDK_FILENAME=tizen-studio-installer.bin" >> $GITHUB_ENV
 
     - name: Cache Tizen SDK installer
       id: cache-tizen-sdk
       uses: actions/cache@v4
       with:
         path: ${{ env.TIZEN_SDK_FILENAME }}
-        key: ${{ runner.os }}-tizen-sdk-${{ env.TIZEN_SDK_SHA256 }}
+        key: ${{ runner.os }}-tizen-sdk-${{ inputs.version }}
 
     - name: Download Tizen SDK installer
       shell: bash
