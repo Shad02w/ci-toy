@@ -1,5 +1,15 @@
-name: Prepare Tizen CLI
-description: Prepare Tizen CLI
+name: Setup Tizen CLI
+description: This action installs the Tizen CLI and adds it to the PATH
+
+
+inputs:
+  version:
+    description: The version of the Tizen CLI to install
+    required: true
+  installation-path:
+    description: The directory to install the Tizen CLI
+    required: false
+    default: ${{ github.workspace }}/tizen-studio
 
 runs:
   using: "composite"
@@ -7,10 +17,9 @@ runs:
     - name: Get hash of Tizen SDK installer URL
       shell: bash
       run: |
-        echo "TIZEN_SDK_URL=https://download.tizen.org/sdk/Installer/tizen-studio_5.6/web-cli_Tizen_Studio_5.6_ubuntu-64.bin" >> $GITHUB_ENV \
+        echo "TIZEN_SDK_URL=https://download.tizen.org/sdk/Installer/tizen-studio_${{ inputs.version }}/web-cli_Tizen_Studio_${{ inputs.version }}_ubuntu-64.bin" >> $GITHUB_ENV \
         && echo "TIZEN_SDK_FILENAME=tizen-studio-installer.bin" >> $GITHUB_ENV \
-        && echo "TIZEN_STUDIO_PATH=${{ github.workspace }}/tizen-studio" >> $GITHUB_ENV \
-        && echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV 
+        && echo "TIZEN_SDK_SHA256=$(echo $TIZEN_SDK_URL | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
 
     - name: Cache Tizen SDK installer
       id: cache-tizen-sdk
@@ -22,7 +31,7 @@ runs:
     - name: Download Tizen SDK installer
       shell: bash
       if: steps.cache-tizen-sdk.outputs.cache-hit != 'true'
-      run: curl -o $TIZEN_SDK_FILENAME "$TIZEN_SDK_URL"
+      run: curl -Lo $TIZEN_SDK_FILENAME "$TIZEN_SDK_URL"
 
     - name: Make Tizen SDK executable
       shell: bash
@@ -30,12 +39,14 @@ runs:
 
     - name: Install Tizen Studio
       shell: bash
-      run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "${{ env.TIZEN_STUDIO_PATH }}"
+      run: ./${{ env.TIZEN_SDK_FILENAME }} --accept-license "${{ inputs.installation-path }}"
 
     - name: Export Tizen Studio path
       shell: bash
-      run: echo "${{ env.TIZEN_STUDIO_PATH }}/tools/ide/bin" >> $GITHUB_PATH
+      run: echo "${{ inputs.installation-path }}/tools/ide/bin" >> $GITHUB_PATH
 
     - name: Log the Tizen CLI version
       shell: bash
       run: tizen version
+
+
