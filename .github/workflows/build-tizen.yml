@@ -58,10 +58,8 @@ jobs:
       - name: Add tizen security profile
         uses: ./.github/actions/add-tizen-security-profile
         with:
-          author-ca: ${{ secrets.TIZEN_AUTHOR_CA }}
           author-key: ${{ secrets.TIZEN_AUTHOR_KEY }}
           author-password: ${{ secrets.TIZEN_PASSWORD }}
-          distributor-ca: ${{ secrets.TIZEN_DISTRIBUTOR_CA }}
           distributor-key: ${{ secrets.TIZEN_DISTRIBUTOR_KEY }}
           distributor-password: ${{ secrets.TIZEN_PASSWORD }}
 

@@ -2,17 +2,11 @@ name: Add Tizen Security Profile
 description: Add Tizen Security Profile
 
 inputs:
-  author-ca:
-    description: CA for author certificate (.crt file) base64 encoded
-    required: true
   author-key:
-    description: Key for author certificatea (.p12 file) base64 encoded
+    description: Key for author certificate (.p12 file) base64 encoded
     required: true
   author-password:
     description: Password for author certificate (plain text)
-    required: true
-  distributor-ca:
-    description: CA for distributor certificate (.crt file) base64 encoded
     required: true
   distributor-key:
     description: Key for distributor certificate (.p12 file) base64 encoded
@@ -39,8 +33,6 @@ runs:
         # Set file paths as environment variables
         echo "AUTHOR_KEY_PATH=${{ github.action_path }}/certs/author.p12" >> $GITHUB_ENV
         echo "DISTRIBUTOR_KEY_PATH=${{ github.action_path }}/certs/distributor.p12" >> $GITHUB_ENV
-        echo "AUTHOR_CA_PATH=${{ github.action_path }}/certs/author-ca.crt" >> $GITHUB_ENV
-        echo "DISTRIBUTOR_CA_PATH=${{ github.action_path }}/certs/distributor-ca.crt" >> $GITHUB_ENV
 
         # Save passwords as environment variables directly
         echo "AUTHOR_PASSWORD=${{ inputs.author-password }}" >> $GITHUB_ENV
@@ -49,10 +41,7 @@ runs:
     - name: Decode base64 certificates and keys
       shell: bash
       run: |
-        echo "${{ inputs.author-ca }}" | base64 -d > ${{ env.AUTHOR_CA_PATH }}
         echo "${{ inputs.author-key }}" | base64 -d > ${{ env.AUTHOR_KEY_PATH }}
-
-        echo "${{ inputs.distributor-ca }}" | base64 -d > ${{ env.DISTRIBUTOR_CA_PATH }}
         echo "${{ inputs.distributor-key }}" | base64 -d > ${{ env.DISTRIBUTOR_KEY_PATH }}
 
     - name: Start persistent DBUS session
