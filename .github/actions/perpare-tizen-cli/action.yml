@@ -8,7 +8,7 @@ inputs:
   installation-path:
     description: The directory to install the Tizen CLI
     required: false
-    default: ${{ github.workspace }}/tizen-studio
+    default: ~/.tizen-studio
 
 runs:
   using: "composite"
