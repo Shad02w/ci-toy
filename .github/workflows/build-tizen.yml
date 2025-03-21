@@ -53,7 +53,7 @@ jobs:
       - name: Prepare Tizen CLI
         uses: ./.github/actions/perpare-tizen-cli
         with:
-          version: "7.0"
+          version: "6.0"
 
       - name: Add tizen security profile
         uses: ./.github/actions/add-tizen-security-profile
