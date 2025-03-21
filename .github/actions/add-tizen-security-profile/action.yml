@@ -1,5 +1,5 @@
 name: Add Tizen Security Profile
-description: Add Tizen Security Profile
+description: Add Tizen Security Profile for application signing
 
 inputs:
   author-key:
@@ -14,6 +14,10 @@ inputs:
   distributor-password:
     description: Password for distributor certificate (plain text)
     required: true
+  profile-name:
+    description: Name of the security profile to create
+    required: false
+    default: "game"
 
 runs:
   using: "composite"
@@ -24,36 +28,30 @@ runs:
 
     - name: Create certificates directory
       shell: bash
-      run: |
-        mkdir -p ${{ github.action_path }}/certs
+      run: mkdir -p ${{ github.action_path }}/certs
 
-    - name: Set environment variables for file paths
+    - name: Prepare certificate files
+      id: certificates
       shell: bash
       run: |
-        # Set file paths as environment variables
-        echo "AUTHOR_KEY_PATH=${{ github.action_path }}/certs/author.p12" >> $GITHUB_ENV
-        echo "DISTRIBUTOR_KEY_PATH=${{ github.action_path }}/certs/distributor.p12" >> $GITHUB_ENV
+        AUTHOR_KEY_PATH="${{ github.action_path }}/certs/author.p12"
+        DISTRIBUTOR_KEY_PATH="${{ github.action_path }}/certs/distributor.p12"
 
-        # Save passwords as environment variables directly
-        echo "AUTHOR_PASSWORD=${{ inputs.author-password }}" >> $GITHUB_ENV
-        echo "DISTRIBUTOR_PASSWORD=${{ inputs.distributor-password }}" >> $GITHUB_ENV
+        echo "${{ inputs.author-key }}" | base64 -d > "$AUTHOR_KEY_PATH"
+        echo "${{ inputs.distributor-key }}" | base64 -d > "$DISTRIBUTOR_KEY_PATH"
 
-    - name: Decode base64 certificates and keys
-      shell: bash
-      run: |
-        echo "${{ inputs.author-key }}" | base64 -d > ${{ env.AUTHOR_KEY_PATH }}
-        echo "${{ inputs.distributor-key }}" | base64 -d > ${{ env.DISTRIBUTOR_KEY_PATH }}
+        echo "author_key_path=$AUTHOR_KEY_PATH" >> $GITHUB_OUTPUT
+        echo "distributor_key_path=$DISTRIBUTOR_KEY_PATH" >> $GITHUB_OUTPUT
 
     - name: Start persistent DBUS session
       shell: bash
       run: |
-        # Start a persistent DBUS session and save the address to the GitHub environment
-        DBUS_ADDRESS=$(dbus-daemon --session --fork --print-address)
+        DBUS_ADDRESS=$(dbus-daemon --session --fork --print-address) 
         echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_ADDRESS" >> $GITHUB_ENV
 
     - name: Setup GNOME keyring and Tizen security profile
       shell: bash
       run: |
         echo "" | gnome-keyring-daemon --unlock
-        tizen security-profiles add -n game -a ${{ env.AUTHOR_KEY_PATH }} -p ${{ env.AUTHOR_PASSWORD }} -d ${{ env.DISTRIBUTOR_KEY_PATH }} -dp ${{ env.DISTRIBUTOR_PASSWORD }}
-        tizen security-profiles list
+        tizen security-profiles add -n "${{ inputs.profile-name }}" -a "${{ steps.certificates.outputs.author_key_path }}" -p "${{ inputs.author-password }}" -d "${{ steps.certificates.outputs.distributor_key_path }}" -dp "${{ inputs.distributor-password }}"
+        tizen security-profiles list | grep -q "${{ inputs.profile-name }}"
