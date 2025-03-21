@@ -70,7 +70,7 @@ jobs:
 
       - name: Log tizen cli logs
         if: always()
-        run: cat ${{ github.workspace }}/tizen-studio-data/cli/logs/cli.log
+        run: cat $HOME/tizen-studio-data/cli/logs/cli.log
 
       - name: Get Web version and build hash
         id: versioning
