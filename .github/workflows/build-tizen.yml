@@ -28,9 +28,57 @@ on:
       - main
 
 jobs:
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.set-matrix.outputs.environments }}
+    steps:
+      - id: set-matrix
+        run: |
+          # Initialize environments array
+          ENVIRONMENTS="[]"
+
+          # Check if triggered by push tag
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            # Extract environment from tag name (format: ctv-ENV-v*.*.*)
+            TAG_NAME="${{ github.ref_name }}"
+            if [[ $TAG_NAME =~ ^ctv-([^-]+)-v ]]; then
+              ENV_NAME="${BASH_REMATCH[1]}"
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["'$ENV_NAME'"]')
+              echo "Extracted environment '$ENV_NAME' from tag '$TAG_NAME'"
+            fi
+          else
+            # Manual workflow dispatch logic
+            if [[ "${{ github.event.inputs.dev }}" == "true" ]]; then
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["dev"]')
+            fi
+            if [[ "${{ github.event.inputs.qa }}" == "true" ]]; then
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["qa"]')
+            fi
+            if [[ "${{ github.event.inputs.staging }}" == "true" ]]; then
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["staging"]')
+            fi
+            if [[ "${{ github.event.inputs.prodtest }}" == "true" ]]; then
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["prodtest"]')
+            fi
+            if [[ "${{ github.event.inputs.prod }}" == "true" ]]; then
+              ENVIRONMENTS=$(echo $ENVIRONMENTS | jq '. += ["prod"]')
+            fi
+          fi
+
+          echo "environments=$ENVIRONMENTS" >> $GITHUB_OUTPUT
+
+      - name: Debug environment matrix
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref type: ${{ github.ref_type }}"
+          echo "Ref name: ${{ github.ref_name }}"
+          echo "Generated environments matrix: ${{ steps.set-matrix.outputs.environments }}"
+
   build-docs:
     name: Build Docs
     runs-on: ubuntu-latest
+    needs: perpeare-matrix
     env:
       WORKSPACE_PATH: app/docs
     steps:
@@ -58,6 +106,7 @@ jobs:
 
   build-tizen:
     name: Build Tizen App
+    needs: perpeare-matrix
     runs-on: ubuntu-latest
     env:
       WORKSPACE_PATH: app/web
