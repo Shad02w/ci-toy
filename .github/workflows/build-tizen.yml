@@ -66,14 +66,17 @@ jobs:
             fi
           fi
 
-          echo "environments=$ENVIRONMENTS" >> $GITHUB_OUTPUT
+          # Format as JSON string for GitHub Actions output
+          ENVIRONMENTS_JSON=$(echo $ENVIRONMENTS | jq -c .)
+          echo "environments=$ENVIRONMENTS_JSON" >> $GITHUB_OUTPUT
 
       - name: Debug environment matrix
         run: |
           echo "Event name: ${{ github.event_name }}"
           echo "Ref type: ${{ github.ref_type }}"
           echo "Ref name: ${{ github.ref_name }}"
-          echo "Generated environments matrix: ${{ steps.set-matrix.outputs.environments }}"
+          echo "Generated environments matrix: '${{ steps.set-matrix.outputs.environments }}'"
+          echo "JSON parse test: ${{ fromJson(steps.set-matrix.outputs.environments) }}"
 
   build-docs:
     name: Build Docs
