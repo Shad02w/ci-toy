@@ -3,29 +3,24 @@ name: Docs and tizen build
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "App Environment(s) to build"
-        required: true
-        type: boolean
-        default: true
       dev:
-        description: "Build for dev environment"
+        description: "🛠️ Build for dev environment"
         type: boolean
         default: true
       qa:
-        description: "Build for qa environment"
+        description: "🧪 Build for qa environment"
         type: boolean
         default: false
       staging:
-        description: "Build for staging environment"
+        description: "🚦 Build for staging environment"
         type: boolean
         default: false
       prodtest:
-        description: "Build for prodtest environment"
+        description: "🔬 Build for prodtest environment"
         type: boolean
         default: false
       prod:
-        description: "Build for prod environment"
+        description: "🚀 Build for prod environment"
         type: boolean
         default: false
   push:
