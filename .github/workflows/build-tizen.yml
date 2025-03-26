@@ -90,7 +90,7 @@ jobs:
 
       - name: Echo environment
         run: |
-          echo "environment: ${{ env.FROM_GITHUB_ENV }}"
+          echo "environment: ${{ vars.FROM_GITHUB_ENV }}"
 
       - name: Setup node and pnpm
         uses: ./.github/actions/setup-node-and-pnpm
