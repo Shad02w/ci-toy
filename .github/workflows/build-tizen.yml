@@ -98,13 +98,13 @@ jobs:
         run: npx nx build docs --verbose
 
       - name: Zip the dist folder
-        run: zip -r docs.zip ${{ env.WORKSPACE_PATH }}/dist
+        run: zip -r docs-${{ matrix.environment }}.zip ${{ env.WORKSPACE_PATH }}/dist
 
       - name: Upload the zipped dist folder
         uses: actions/upload-artifact@v4
         with:
           name: docs-${{ matrix.environment }}
-          path: docs.zip
+          path: docs-${{ matrix.environment }}.zip
           if-no-files-found: error
           retention-days: 1
 
