@@ -106,6 +106,7 @@ jobs:
           name: docs-${{ matrix.environment }}
           path: docs.zip
           if-no-files-found: error
+          retention-days: 1
 
   build-tizen:
     name: Build Tizen App
@@ -163,6 +164,7 @@ jobs:
           name: tizen
           path: ${{ env.WORKSPACE_PATH }}/out/*
           if-no-files-found: error
+          retention-days: 1
 
   # This job runs after all builds are complete and combines all artifacts
   combine-artifacts:
@@ -178,6 +180,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: combined-artifacts
+          merge-multiple: true
 
       - name: List downloaded artifacts
         run: find combined-artifacts -type f | sort
@@ -195,4 +198,13 @@ jobs:
           name: all-artifacts
           path: all-artifacts.zip
           if-no-files-found: error
-          retention-days: 5
+          retention-days: 30
+
+      # Delete intermediate artifacts that are no longer needed
+      - name: Delete intermediate artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            docs-*
+            tizen
+          failOnError: false
