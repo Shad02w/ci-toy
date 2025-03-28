@@ -1,5 +1,5 @@
-name: Add Tizen Security Profile
-description: Add Tizen Security Profile for application signing
+name: Seteup Tizen Security Profile
+description: Setup Tizen Security Profile for application signing
 
 inputs:
   author-key:
